@@ -45,12 +45,12 @@ import org.vividus.bdd.steps.StringComparisonRule;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.WaitResult;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.State;
-import org.vividus.ui.web.action.IWaitActions;
+import org.vividus.ui.web.action.IWebWaitActions;
 import org.vividus.ui.web.action.IWindowsActions;
-import org.vividus.ui.web.action.WaitResult;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.context.SearchContextSetter;
 import org.vividus.ui.web.util.LocatorUtil;
@@ -107,7 +107,7 @@ class SetContextStepsTests
     private IWindowsActions windowsActions;
 
     @Mock
-    private IWaitActions waitActions;
+    private IWebWaitActions waitActions;
 
     @InjectMocks
     private SetContextSteps setContextSteps;
@@ -129,7 +129,7 @@ class SetContextStepsTests
     void testChangeContextToElementWithAttribute()
     {
         when(mockedBaseValidations.assertIfElementExists(AN_ELEMENT_WITH_THE_ATTRIBUTE_ATTRIBUTE_TYPE_ATTRIBUTE_VALUE,
-                new SearchAttributes(ActionAttributeType.XPATH, XPATH_ATTRIBUTE_VALUE))).thenReturn(mockedWebElement);
+                new SearchAttributes(WebActionAttributeType.XPATH, XPATH_ATTRIBUTE_VALUE))).thenReturn(mockedWebElement);
         setContextSteps.changeContextToElementWithAttribute(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE);
         verifyContextSetting(mockedWebElement);
     }
@@ -138,7 +138,7 @@ class SetContextStepsTests
     void testChangeContextToStateElementWithAttribute()
     {
         when(mockedBaseValidations.assertIfElementExists(AN_ELEMENT_WITH_THE_ATTRIBUTE_ATTRIBUTE_TYPE_ATTRIBUTE_VALUE,
-                new SearchAttributes(ActionAttributeType.XPATH, XPATH_ATTRIBUTE_VALUE))).thenReturn(mockedWebElement);
+                new SearchAttributes(WebActionAttributeType.XPATH, XPATH_ATTRIBUTE_VALUE))).thenReturn(mockedWebElement);
         when(mockedBaseValidations.assertElementState(THE_FOUND_ELEMENT_IS + State.ENABLED, State.ENABLED,
                 mockedWebElement)).thenReturn(true);
         setContextSteps.changeContextToStateElementWithAttribute(State.ENABLED, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE);
@@ -155,7 +155,7 @@ class SetContextStepsTests
     @Test
     void testChangeContextToElement()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(XPATH));
         when(mockedBaseValidations.assertIfElementExists(
                 "Element to set context", searchAttributes)).thenReturn(mockedWebElement);
@@ -168,8 +168,8 @@ class SetContextStepsTests
     {
         when(mockedBaseValidations
                 .assertIfElementExists(AN_ELEMENT_WITH_THE_NAME_NAME,
-                        new SearchAttributes(ActionAttributeType.ELEMENT_NAME, NAME)
-                                .addFilter(ActionAttributeType.STATE, State.ENABLED.toString())))
+                        new SearchAttributes(WebActionAttributeType.ELEMENT_NAME, NAME)
+                                .addFilter(WebActionAttributeType.STATE, State.ENABLED.toString())))
                 .thenReturn(mockedWebElement);
         setContextSteps.changeContextToElementWithName(State.ENABLED, NAME);
         verifyContextSetting(mockedWebElement);
@@ -238,7 +238,7 @@ class SetContextStepsTests
     {
         when(webDriverProvider.get()).thenReturn(mockedWebDiver);
         when(mockedWebDiver.switchTo()).thenReturn(mockedTargetLocator);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(XPATH));
         when(mockedBaseValidations.assertIfElementExists("A frame", searchAttributes)).thenReturn(mockedWebElement);
         InOrder ordered = inOrder(mockedTargetLocator, webUiContext);
@@ -251,7 +251,7 @@ class SetContextStepsTests
     @Test
     void testSwitchingToFrameByXpathIfElementNotExist()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(XPATH));
         when(mockedWebDiver.switchTo()).thenReturn(mockedTargetLocator);
         setContextSteps.switchingToFrame(searchAttributes);

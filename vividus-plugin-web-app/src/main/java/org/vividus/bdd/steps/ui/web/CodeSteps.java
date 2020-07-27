@@ -21,8 +21,6 @@ import static org.hamcrest.Matchers.containsString;
 import java.io.IOException;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -34,20 +32,31 @@ import org.vividus.bdd.steps.ui.web.model.JsArgument;
 import org.vividus.bdd.steps.ui.web.model.JsArgumentType;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
 import org.vividus.ui.web.util.LocatorUtil;
 
 public class CodeSteps
 {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IJavascriptActions javascriptActions;
-    @Inject private ISoftAssert softAssert;
+    private final IBaseValidations baseValidations;
+    private final IJavascriptActions javascriptActions;
+    private final ISoftAssert softAssert;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public CodeSteps(IBaseValidations baseValidations, IJavascriptActions javascriptActions, ISoftAssert softAssert,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.javascriptActions = javascriptActions;
+        this.softAssert = softAssert;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Executes JavaScript code with specified arguments
@@ -127,7 +136,7 @@ public class CodeSteps
     public void ifFaviconWithSrcExists(String srcpart)
     {
         WebElement faviconElement = baseValidations.assertIfElementExists("Favicon",
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(attributeTypeService.findAttributeType(ActionAttributeType.XPATH),
                         new SearchParameters(LocatorUtil.getXPath("//head/link[@rel='shortcut icon' or @rel='icon']"),
                                 Visibility.ALL)));
         if (faviconElement != null)
@@ -158,20 +167,5 @@ public class CodeSteps
         locator.getSearchParameters().setVisibility(Visibility.ALL);
         return baseValidations.assertIfNumberOfElementsFound("The number of found invisible elements",
                     locator, quantity, comparisonRule);
-    }
-
-    public void setJavascriptActions(IJavascriptActions javascriptActions)
-    {
-        this.javascriptActions = javascriptActions;
-    }
-
-    public void setBaseValidations(IBaseValidations baseValidations)
-    {
-        this.baseValidations = baseValidations;
-    }
-
-    public void setSoftAssert(ISoftAssert softAssert)
-    {
-        this.softAssert = softAssert;
     }
 }

@@ -17,14 +17,21 @@
 package org.vividus.spring;
 
 import org.springframework.core.convert.converter.Converter;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.util.SearchAttributesConversionUtils;
 
 public class StringToSearchAttributesConverter implements Converter<String, SearchAttributes>
 {
+    private final SearchAttributesConversionUtils conversionUtils;
+
+    public StringToSearchAttributesConverter(SearchAttributesConversionUtils conversionUtils)
+    {
+        this.conversionUtils = conversionUtils;
+    }
+
     @Override
     public SearchAttributes convert(String source)
     {
-        return SearchAttributesConversionUtils.convertToSearchAttributes(source);
+        return conversionUtils.convertToSearchAttributes(source);
     }
 }

@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
-import static org.vividus.ui.web.action.search.ActionAttributeType.CASE_SENSITIVE_TEXT;
+import static org.vividus.ui.web.action.search.WebActionAttributeType.CASE_SENSITIVE_TEXT;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -61,13 +61,13 @@ import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IElementValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.ClickResult;
 import org.vividus.ui.web.action.IMouseActions;
 import org.vividus.ui.web.action.WebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
@@ -151,7 +151,7 @@ public class ElementStepsTests
     @Test
     public void testContextClickElementByLocator()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations.assertIfElementExists(AN_ELEMENT_TO_CLICK, searchAttributes)).thenReturn(webElement);
         elementSteps.contextClickElementByLocator(searchAttributes);
         verify(mouseActions).contextClick(webElement);
@@ -160,7 +160,7 @@ public class ElementStepsTests
     @Test
     public void testClickOnElementByLocator()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.ELEMENT_NAME, ELEMENT_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.ELEMENT_NAME, ELEMENT_NAME);
         when(baseValidations.assertIfElementExists(AN_ELEMENT_WITH_THE_ATTRIBUTES, searchAttributes))
                 .thenReturn(webElement);
         elementSteps.clickOnElement(searchAttributes);
@@ -170,7 +170,7 @@ public class ElementStepsTests
     @Test
     public void testClickAllElementsByLocator()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations
                 .assertIfElementsExist("The elements to click", searchAttributes))
                 .thenReturn(Arrays.asList(webElement, webElement));
@@ -181,7 +181,7 @@ public class ElementStepsTests
     @Test
     public void testClickAllElementsByLocatorNoElements()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations.assertIfElementsExist("Elements to click",
                 searchAttributes)).thenReturn(List.of());
         elementSteps.clickOnAllElements(searchAttributes);
@@ -194,7 +194,7 @@ public class ElementStepsTests
         int widthInPerc = 50;
         when(webUiContext.getSearchContext(WebElement.class)).thenReturn(webElement);
         when(baseValidations.assertIfElementExists("'Body' element", webDriverProvider.get(),
-                new SearchAttributes(ActionAttributeType.XPATH, new SearchParameters("//body", Visibility.ALL))))
+                new SearchAttributes(WebActionAttributeType.XPATH, new SearchParameters("//body", Visibility.ALL))))
                 .thenReturn(bodyElement);
         elementSteps.isElementHasRightWidth(widthInPerc);
         verify(elementValidations).assertIfElementHasWidthInPerc(bodyElement, webElement, widthInPerc);
@@ -205,7 +205,7 @@ public class ElementStepsTests
     {
         int width = 50;
         when(webUiContext.getSearchContext(WebElement.class)).thenReturn(webElement);
-        when(baseValidations.assertIfElementExists("Parent element", new SearchAttributes(ActionAttributeType.XPATH,
+        when(baseValidations.assertIfElementExists("Parent element", new SearchAttributes(WebActionAttributeType.XPATH,
                 "./.."))).thenReturn(webElement);
         elementSteps.isElementHasWidthRelativeToTheParentElement(width);
         verify(elementValidations).assertIfElementHasWidthInPerc(webElement, webElement, width);
@@ -243,7 +243,7 @@ public class ElementStepsTests
     {
         ComparisonRule comparisonRule = ComparisonRule.EQUAL_TO;
         int number = 1;
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         elementSteps.thePageContainsQuantityElements(searchAttributes, comparisonRule, number);
         verify(baseValidations).assertIfNumberOfElementsFound(THE_NUMBER_OF_FOUND_ELEMENTS,
                 searchAttributes, number, comparisonRule);
@@ -252,9 +252,9 @@ public class ElementStepsTests
     @Test
     public void doesEachElementByLocatorHaveChildWithLocatorSuccess()
     {
-        SearchAttributes elementAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes elementAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(ELEMENT_XPATH));
-        SearchAttributes childAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes childAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(CHILD_XPATH));
         when(baseValidations.assertIfElementsExist(THE_NUMBER_OF_PARENT_ELEMENTS, elementAttributes))
                     .thenReturn(Arrays.asList(webElement, webElement));
@@ -266,9 +266,9 @@ public class ElementStepsTests
     @Test
     public void doesEachElementByLocatorHaveChildWithLocatorNoElements()
     {
-        SearchAttributes elementAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes elementAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(ELEMENT_XPATH));
-        SearchAttributes childAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes childAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 LocatorUtil.getXPath(CHILD_XPATH));
         when(baseValidations.assertIfElementsExist(THE_NUMBER_OF_PARENT_ELEMENTS,
                 elementAttributes)).thenReturn(List.of());
@@ -283,7 +283,7 @@ public class ElementStepsTests
         Dimension dimension = Dimension.HEIGHT;
         elementsList.add(webElement);
         when(webUiContext.getSearchContext()).thenReturn(searchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations.assertIfAtLeastNumberOfElementsExist(THE_NUMBER_OF_FOUND_ELEMENTS, searchAttributes, 2))
                 .thenReturn(elementsList);
         elementSteps.doesEachElementByLocatorHaveSameDimension(searchAttributes, dimension);
@@ -293,7 +293,7 @@ public class ElementStepsTests
     @Test
     public void testHoverMouseOverAnElementByLocator()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.ELEMENT_NAME, ELEMENT_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.ELEMENT_NAME, ELEMENT_NAME);
         when(baseValidations.assertIfElementExists(AN_ELEMENT_WITH_THE_ATTRIBUTES, searchAttributes))
                 .thenReturn(webElement);
         elementSteps.hoverMouseOverElement(searchAttributes);
@@ -320,7 +320,7 @@ public class ElementStepsTests
         mockResourceLoader(mockResource(ABSOLUTE_PATH, file, true));
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
         when(webDriverProvider.isRemoteExecution()).thenReturn(false);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         when(baseValidations.assertIfElementExists(AN_ELEMENT, searchAttributes)).thenReturn(webElement);
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
@@ -339,7 +339,7 @@ public class ElementStepsTests
         when(resource.getInputStream()).thenReturn(inputStream);
         mockResourceLoader(resource);
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         when(baseValidations.assertIfElementExists(AN_ELEMENT, searchAttributes)).thenReturn(webElement);
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
@@ -358,7 +358,7 @@ public class ElementStepsTests
         when(webDriverProvider.get()).thenReturn(webDriver);
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
         when(webDriverProvider.isRemoteExecution()).thenReturn(true);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         when(baseValidations.assertIfElementExists(AN_ELEMENT, searchAttributes)).thenReturn(webElement);
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
@@ -376,7 +376,7 @@ public class ElementStepsTests
         when(webDriverProvider.get()).thenReturn(webDriver);
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
         when(webDriverProvider.isRemoteExecution()).thenReturn(true);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         when(baseValidations.assertIfElementExists(AN_ELEMENT, searchAttributes)).thenReturn(webElement);
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
@@ -391,7 +391,7 @@ public class ElementStepsTests
         mockRemoteWebDriver();
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
         when(webDriverProvider.isRemoteExecution()).thenReturn(true);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         when(baseValidations.assertIfElementExists(AN_ELEMENT, searchAttributes)).thenReturn(webElement);
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
@@ -403,7 +403,7 @@ public class ElementStepsTests
     {
         File file = mockFileForUpload();
         mockResourceLoader(mockResource(ABSOLUTE_PATH, file, true));
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
         verify(webElement, never()).sendKeys(ABSOLUTE_PATH);
@@ -416,9 +416,9 @@ public class ElementStepsTests
         mockResourceLoader(mockResource(ABSOLUTE_PATH, file, true));
         when(softAssert.assertTrue(FILE_FILE_PATH_EXISTS, true)).thenReturn(true);
         when(webDriverProvider.isRemoteExecution()).thenReturn(false);
-        when(baseValidations.assertIfElementExists(AN_ELEMENT, new SearchAttributes(ActionAttributeType.XPATH,
+        when(baseValidations.assertIfElementExists(AN_ELEMENT, new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(LOCATOR_BY_ATTRIBUTE, Visibility.ALL)))).thenReturn(null);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(XPATH).setVisibility(Visibility.ALL));
         elementSteps.uploadFile(searchAttributes, FILE_PATH);
         verify(webElement, never()).sendKeys(ABSOLUTE_PATH);

@@ -29,6 +29,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
+import org.vividus.ui.action.DescriptiveWait;
 
 @ExtendWith(MockitoExtension.class)
 class DescriptiveWaitTests

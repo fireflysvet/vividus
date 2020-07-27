@@ -16,8 +16,6 @@
 
 package org.vividus.bdd.steps.ui.web;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.StringUtils;
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
@@ -26,10 +24,12 @@ import org.jbehave.core.steps.Parameters;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.State;
 import org.vividus.ui.web.action.IMouseActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
@@ -37,8 +37,17 @@ public class RadioButtonSteps
 {
     private static final String RADIO_BUTTON = "Radio button";
 
-    @Inject private IMouseActions mouseActions;
-    @Inject private IBaseValidations baseValidations;
+    private final IMouseActions mouseActions;
+    private final IBaseValidations baseValidations;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public RadioButtonSteps(IMouseActions mouseActions, IBaseValidations baseValidations,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.mouseActions = mouseActions;
+        this.baseValidations = baseValidations;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks that a <b>radio button</b> specified by the <b>name</b> exists within
@@ -68,9 +77,10 @@ public class RadioButtonSteps
     @Then("a radio button with the name '$radioOption' exists")
     public WebElement assertIfRadioOptionExists(String radioOption)
     {
+        IActionAttributeType xpathAttributeType = attributeTypeService.findAttributeType(ActionAttributeType.XPATH);
         WebElement radioButtonLabel = baseValidations.assertIfElementExists(
                 String.format("A radio button label with text '%s'", radioOption),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(xpathAttributeType,
                         LocatorUtil.getXPath(".//label[text()=%1$s or *=%1$s or @*=%1$s]", radioOption)));
         if (radioButtonLabel == null)
         {
@@ -79,11 +89,11 @@ public class RadioButtonSteps
         String labelForAtr = radioButtonLabel.getAttribute("for");
         if (StringUtils.isNotEmpty(labelForAtr))
         {
-            return baseValidations.assertIfElementExists(RADIO_BUTTON, new SearchAttributes(ActionAttributeType.XPATH,
+            return baseValidations.assertIfElementExists(RADIO_BUTTON, new SearchAttributes(xpathAttributeType,
                     LocatorUtil.getXPath(".//input[@type='radio' and @id=%s]", labelForAtr)));
         }
         return baseValidations.assertIfElementExists(RADIO_BUTTON, radioButtonLabel,
-                new SearchAttributes(ActionAttributeType.XPATH, "input[@type='radio']"));
+                new SearchAttributes(xpathAttributeType, "input[@type='radio']"));
     }
 
     /**

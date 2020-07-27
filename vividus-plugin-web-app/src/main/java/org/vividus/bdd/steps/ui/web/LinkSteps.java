@@ -16,24 +16,30 @@
 
 package org.vividus.bdd.steps.ui.web;
 
-import static org.vividus.ui.web.action.search.ActionAttributeType.LINK_URL;
-
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.model.ExamplesTable;
 import org.jbehave.core.steps.Parameters;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @TakeScreenshotOnFailure
 public class LinkSteps
 {
     private static final String TEXT = "text";
 
-    @Inject private IBaseValidations baseValidations;
+    private final IBaseValidations baseValidations;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public LinkSteps(IBaseValidations baseValidations, IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks that searchContext contains <b>linkItems</b> with expected text and url
@@ -71,8 +77,8 @@ public class LinkSteps
         {
             String text = row.valueAs(TEXT, String.class);
             String url = row.valueAs("link", String.class);
-            SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, text).addFilter(
-                    LINK_URL, url);
+            SearchAttributes attributes = new SearchAttributes(findAttributeType(WebActionAttributeType.LINK_TEXT),
+                    text).addFilter(findAttributeType(WebActionAttributeType.LINK_URL), url);
             baseValidations.assertIfElementExists("Link with attributes: " + attributes, attributes);
         }
     }
@@ -105,8 +111,14 @@ public class LinkSteps
         expectedLinkItems.getRowsAsParameters(true).stream()
                 .<String>map(row -> row.valueAs(TEXT, String.class))
                 .forEach(text -> {
-                    SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, text);
+                    SearchAttributes attributes = new SearchAttributes(
+                            findAttributeType(WebActionAttributeType.LINK_TEXT), text);
                     baseValidations.assertIfElementExists(String.format("Link with text '%s'", text), attributes);
                 });
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

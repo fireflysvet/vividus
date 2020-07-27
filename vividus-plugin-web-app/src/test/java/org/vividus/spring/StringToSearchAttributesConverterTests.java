@@ -19,8 +19,8 @@ package org.vividus.spring;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 class StringToSearchAttributesConverterTests
 {
@@ -29,6 +29,6 @@ class StringToSearchAttributesConverterTests
     @Test
     void testConvert()
     {
-        assertEquals(new SearchAttributes(ActionAttributeType.ID, "id"), converter.convert("By.id(id)"));
+        assertEquals(new SearchAttributes(WebActionAttributeType.ID, "id"), converter.convert("By.id(id)"));
     }
 }

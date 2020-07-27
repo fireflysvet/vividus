@@ -30,8 +30,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.vividus.ui.web.action.IExpectedConditions;
-import org.vividus.ui.web.action.IExpectedSearchContextCondition;
+import org.vividus.ui.action.IExpectedConditions;
+import org.vividus.ui.action.IExpectedSearchContextCondition;
 
 @SuppressWarnings("unchecked")
 class DropDownStateTests

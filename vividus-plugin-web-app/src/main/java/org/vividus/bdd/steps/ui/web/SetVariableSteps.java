@@ -23,8 +23,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
@@ -35,12 +33,16 @@ import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.variable.VariableScope;
 import org.vividus.selenium.IWebDriverProvider;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
 import org.vividus.ui.web.action.ISearchActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 import org.vividus.util.UriUtils;
@@ -48,18 +50,35 @@ import org.vividus.util.UriUtils;
 @TakeScreenshotOnFailure
 public class SetVariableSteps
 {
-    @Inject private IWebDriverProvider webDriverProvider;
-    @Inject private ISoftAssert softAssert;
+    private final IWebDriverProvider webDriverProvider;
+    private final ISoftAssert softAssert;
 
-    @Inject private ISearchActions searchActions;
+    private final ISearchActions searchActions;
 
-    @Inject private IBaseValidations baseValidations;
+    private final IBaseValidations baseValidations;
 
-    @Inject private IBddVariableContext bddVariableContext;
+    private final IBddVariableContext bddVariableContext;
 
-    @Inject private IWebUiContext webUiContext;
-    @Inject private IWebElementActions webElementActions;
-    @Inject private IJavascriptActions javascriptActions;
+    private final IWebUiContext webUiContext;
+    private final IWebElementActions webElementActions;
+    private final IJavascriptActions javascriptActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public SetVariableSteps(IWebDriverProvider webDriverProvider, ISoftAssert softAssert, ISearchActions searchActions,
+            IBaseValidations baseValidations, IBddVariableContext bddVariableContext, IWebUiContext webUiContext,
+            IWebElementActions webElementActions, IJavascriptActions javascriptActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.webDriverProvider = webDriverProvider;
+        this.softAssert = softAssert;
+        this.searchActions = searchActions;
+        this.baseValidations = baseValidations;
+        this.bddVariableContext = bddVariableContext;
+        this.webUiContext = webUiContext;
+        this.webElementActions = webElementActions;
+        this.javascriptActions = javascriptActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Gets an expected <b>value</b> from the <b>URL</b>
@@ -208,7 +227,8 @@ public class SetVariableSteps
         List<WebElement> frames = getVideoIFrames(1);
         if (!frames.isEmpty())
         {
-            SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, name);
+            SearchAttributes attributes = new SearchAttributes(findAttributeType(WebActionAttributeType.LINK_TEXT),
+                    name);
             for (WebElement frame : frames)
             {
                 getWebDriver().switchTo().frame(frame);
@@ -276,7 +296,7 @@ public class SetVariableSteps
     public void getNumberOfElementsByAttributeValueToVariable(String attributeType, String attributeValue,
             Set<VariableScope> scopes, String variableName)
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(findAttributeType(ActionAttributeType.XPATH),
                 LocatorUtil.getXPathByAttribute(attributeType, attributeValue));
         List<WebElement> elements = searchActions.findElements(getSearchContext(), searchAttributes);
         saveVariable(scopes, variableName, elements.size());
@@ -443,7 +463,7 @@ public class SetVariableSteps
 
     private List<WebElement> getVideoIFrames(int leastNumber)
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(findAttributeType(ActionAttributeType.XPATH),
                 LocatorUtil.getXPath("div[contains(@class,'video')]/iframe"));
         return baseValidations.assertIfAtLeastNumberOfElementsExist("The number of found video frames",
                 searchAttributes, leastNumber);
@@ -484,5 +504,10 @@ public class SetVariableSteps
     private SearchContext getSearchContext()
     {
         return webUiContext.getSearchContext();
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

@@ -33,12 +33,12 @@ import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.vividus.bdd.steps.ComparisonRule;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.validation.matcher.ExistsMatcher;
 import org.vividus.ui.validation.matcher.ExpectedConditionsMatcher;
 import org.vividus.ui.validation.matcher.NotExistsMatcher;
 import org.vividus.ui.web.IState;
 import org.vividus.ui.web.action.ISearchActions;
-import org.vividus.ui.web.action.search.SearchAttributes;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.util.UriUtils;
 

@@ -22,8 +22,6 @@ import static org.hamcrest.Matchers.not;
 import java.time.Duration;
 import java.util.function.BooleanSupplier;
 
-import javax.inject.Inject;
-
 import org.hamcrest.Matcher;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebDriver;
@@ -35,12 +33,16 @@ import org.vividus.bdd.steps.StringComparisonRule;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.WaitResult;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.State;
-import org.vividus.ui.web.action.IWaitActions;
+import org.vividus.ui.web.action.IWebWaitActions;
 import org.vividus.ui.web.action.IWindowsActions;
-import org.vividus.ui.web.action.WaitResult;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
@@ -49,12 +51,27 @@ public class SetContextSteps
 {
     private static final String AN_ELEMENT_WITH_THE_ATTRIBUTE = "An element with the attribute '%1$s'='%2$s'";
 
-    @Inject private IWebDriverProvider webDriverProvider;
-    @Inject private IWebUiContext webUiContext;
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IHighlightingSoftAssert highlightingSoftAssert;
-    @Inject private IWindowsActions windowsActions;
-    @Inject private IWaitActions waitActions;
+    private final IWebDriverProvider webDriverProvider;
+    private final IWebUiContext webUiContext;
+    private final IBaseValidations baseValidations;
+    private final IHighlightingSoftAssert highlightingSoftAssert;
+    private final IWindowsActions windowsActions;
+    private final IWebWaitActions waitActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public SetContextSteps(IWebDriverProvider webDriverProvider, IWebUiContext webUiContext,
+            IBaseValidations baseValidations, IHighlightingSoftAssert highlightingSoftAssert,
+            IWindowsActions windowsActions, IWebWaitActions waitActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.webDriverProvider = webDriverProvider;
+        this.webUiContext = webUiContext;
+        this.baseValidations = baseValidations;
+        this.highlightingSoftAssert = highlightingSoftAssert;
+        this.windowsActions = windowsActions;
+        this.waitActions = waitActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Set the context for further localization of elements to the <b>page</b> itself
@@ -95,8 +112,8 @@ public class SetContextSteps
         changeContextToPage();
         WebElement element = baseValidations.assertIfElementExists(
                 String.format("An element with the name '%1$s'", name),
-                new SearchAttributes(ActionAttributeType.ELEMENT_NAME, name)
-                        .addFilter(ActionAttributeType.STATE, state.toString()));
+                new SearchAttributes(findAttributeType(WebActionAttributeType.ELEMENT_NAME), name)
+                        .addFilter(findAttributeType(WebActionAttributeType.STATE), state.toString()));
         webUiContext.putSearchContext(element, () -> changeContextToElementWithName(state, name));
     }
 
@@ -113,7 +130,7 @@ public class SetContextSteps
 
         WebElement element = baseValidations.assertIfElementExists(
                 String.format(AN_ELEMENT_WITH_THE_ATTRIBUTE, attributeType, attributeValue),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findAttributeType(ActionAttributeType.XPATH),
                         LocatorUtil.getXPathByAttribute(attributeType, attributeValue)));
         webUiContext.putSearchContext(element, () -> changeContextToElementWithAttribute(attributeType,
                 attributeValue));
@@ -132,7 +149,7 @@ public class SetContextSteps
     {
         changeContextToPage();
         WebElement element = baseValidations.assertIfElementExists(String.format(AN_ELEMENT_WITH_THE_ATTRIBUTE,
-                attributeType, attributeValue), new SearchAttributes(ActionAttributeType.XPATH,
+                attributeType, attributeValue), new SearchAttributes(findAttributeType(ActionAttributeType.XPATH),
                         LocatorUtil.getXPathByAttribute(attributeType, attributeValue)));
         if (!baseValidations.assertElementState("The found element is " + state, state, element))
         {
@@ -310,5 +327,10 @@ public class SetContextSteps
     private WebDriver getWebDriver()
     {
         return webDriverProvider.get();
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

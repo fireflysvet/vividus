@@ -24,9 +24,13 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.vividus.selenium.LocatorFactory;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 public final class SearchAttributesConversionUtils
 {
@@ -39,18 +43,21 @@ public final class SearchAttributesConversionUtils
     private static final Pattern SEARCH_ATTRIBUTE_PATTERN = Pattern.compile(LOCATOR_FORMAT);
     private static final Pattern FILTER_PATTERN = Pattern.compile("([a-zA-Z]+)(?:\\()([^()]*)(?:\\))");
 
-    private SearchAttributesConversionUtils()
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public SearchAttributesConversionUtils(IActionAttributeTypeService attributeTypeService)
     {
+        this.attributeTypeService = attributeTypeService;
     }
 
-    public static Set<SearchAttributes> convertToSearchAttributesSet(String locatorsAsString)
+    public Set<SearchAttributes> convertToSearchAttributesSet(String locatorsAsString)
     {
         return LocatorFactory.convertStringToLocators(locatorsAsString).stream()
                 .map(locator -> convertToSearchAttributes(locator.getType(), locator.getValue()))
                 .collect(Collectors.toSet());
     }
 
-    public static SearchAttributes convertToSearchAttributes(String locatorAsString)
+    public SearchAttributes convertToSearchAttributes(String locatorAsString)
     {
         String[] locatorParts = locatorAsString.split("->filter\\.");
         String locator = locatorParts.length == 0 ? locatorAsString : locatorParts[0];
@@ -80,34 +87,40 @@ public final class SearchAttributesConversionUtils
                 + LOCATOR_FORMAT + CLOSING_BRACKET + " Actual: [" + locatorAsString + CLOSING_BRACKET);
     }
 
-    private static void applyFilter(SearchAttributes searchAttributes, String filterType, String filterValue)
+    private void applyFilter(SearchAttributes searchAttributes, String filterType, String filterValue)
     {
-        findActionAttributeType(ActionAttributeType.getFilterTypes(), filterType).ifPresent(
+        findActionAttributeType(attributeTypeService.getFilterTypes(), filterType).ifPresent(
             type -> searchAttributes.addFilter(type, filterValue));
     }
 
-    private static SearchAttributes convertToSearchAttributes(String searchType, String searchValue)
+    private SearchAttributes convertToSearchAttributes(String searchType, String searchValue)
     {
         switch (searchType.toLowerCase())
         {
             case "name":
-                return new SearchAttributes(ActionAttributeType.ELEMENT_NAME, searchValue);
+                return new SearchAttributes(findAttributeType(WebActionAttributeType.ELEMENT_NAME), searchValue);
             case "partiallinktext":
-                return new SearchAttributes(ActionAttributeType.TAG_NAME, "a")
-                    .addFilter(ActionAttributeType.TEXT_PART, searchValue);
+                return new SearchAttributes(findAttributeType(WebActionAttributeType.TAG_NAME), "a")
+                    .addFilter(findAttributeType(WebActionAttributeType.TEXT_PART), searchValue);
             case "xpath":
-                return new SearchAttributes(ActionAttributeType.XPATH, LocatorUtil.getXPath(searchValue));
+                return new SearchAttributes(findAttributeType(ActionAttributeType.XPATH), LocatorUtil.getXPath(searchValue));
             default:
-                return findActionAttributeType(ActionAttributeType.getSearchTypes(), searchType)
+                return findActionAttributeType(attributeTypeService.getSearchTypes(), searchType)
                         .map(type -> new SearchAttributes(type, searchValue))
                         .orElseThrow(() -> new IllegalArgumentException("Unsupported locator type: " + searchType));
         }
     }
 
-    private static Optional<ActionAttributeType> findActionAttributeType(Set<ActionAttributeType> types, String type)
+    private static Optional<IActionAttributeType> findActionAttributeType(Set<IActionAttributeType> types, String type)
     {
         String typeInLowerCase = type.toLowerCase();
-        return types.stream().filter(t -> StringUtils.replace(t.name().toLowerCase(), "_", "").equals(typeInLowerCase))
-                .findFirst();
+        return types.stream()
+                    .filter(t -> StringUtils.replace(t.getAttributeName().toLowerCase(), "_", "").equals(typeInLowerCase))
+                    .findFirst();
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

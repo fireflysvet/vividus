@@ -25,8 +25,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @ExtendWith(MockitoExtension.class)
 class LinkStepsTests
@@ -45,8 +45,8 @@ class LinkStepsTests
     {
         ExamplesTable expectedLinkItems = new ExamplesTable("|text|link|\n|Home|/|\n");
         webUiLinkSteps.ifLinkItemsWithTextAndLink(expectedLinkItems);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, HOME).addFilter(
-                ActionAttributeType.LINK_URL, SLASH);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, HOME).addFilter(
+                WebActionAttributeType.LINK_URL, SLASH);
         verify(baseValidations).assertIfElementExists("Link with attributes: " + attributes, attributes);
     }
 
@@ -55,7 +55,7 @@ class LinkStepsTests
     {
         ExamplesTable expectedLinkItems = new ExamplesTable("|text|\n|Home|\n|");
         webUiLinkSteps.ifLinkItemsWithTextExists(expectedLinkItems);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, HOME);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, HOME);
         verify(baseValidations).assertIfElementExists("Link with text '" + HOME + "'", attributes);
     }
 }

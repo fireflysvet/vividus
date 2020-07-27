@@ -42,13 +42,13 @@ import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.ui.Select;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.DropDownState;
 import org.vividus.ui.web.action.IFieldActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @ExtendWith(MockitoExtension.class)
 class DropdownStepsTests
@@ -93,7 +93,7 @@ class DropdownStepsTests
     {
         dropdownSteps.isDropDownWithNameFound(DROP_DOWN_LIST_NAME);
         verify(baseValidations).assertIfElementExists(DROP_DOWN_WITH_THE_NAME_DROP_DOWN_LIST_NAME,
-                new SearchAttributes(ActionAttributeType.XPATH, DROP_DOWN_XPATH));
+                new SearchAttributes(WebActionAttributeType.XPATH, DROP_DOWN_XPATH));
     }
 
     @Test
@@ -147,7 +147,7 @@ class DropdownStepsTests
     {
         dropdownSteps.doesNotDropDownExist(DROP_DOWN_LIST_NAME);
         verify(baseValidations).assertIfElementDoesNotExist(DROP_DOWN_WITH_THE_NAME_DROP_DOWN_LIST_NAME,
-                new SearchAttributes(ActionAttributeType.XPATH, new SearchParameters(DROP_DOWN_XPATH, Visibility.ALL)));
+                new SearchAttributes(WebActionAttributeType.XPATH, new SearchParameters(DROP_DOWN_XPATH, Visibility.ALL)));
     }
 
     @Test
@@ -213,7 +213,7 @@ class DropdownStepsTests
     @Test
     void testSelectTextFromDropDownByLocatorXpath()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations.assertIfElementExists(A_DROP_DOWN, searchAttributes)).thenReturn(webElement);
         when(webElement.getTagName()).thenReturn(SELECT);
         dropdownSteps.selectTextFromDropDownByLocator(TEXT, searchAttributes);
@@ -223,7 +223,7 @@ class DropdownStepsTests
     @Test
     void testSelectTextFromDropDownByLocatorXpathNoElement()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(baseValidations.assertIfElementExists(A_DROP_DOWN, searchAttributes)).thenReturn(null);
         dropdownSteps.selectTextFromDropDownByLocator(TEXT, searchAttributes);
         verifyNoInteractions(fieldActions);
@@ -232,7 +232,7 @@ class DropdownStepsTests
     private WebElement findDropDownListWithParameters(boolean isMultiple)
     {
         when(baseValidations.assertIfElementExists(DROP_DOWN_WITH_THE_NAME_DROP_DOWN_LIST_NAME,
-                new SearchAttributes(ActionAttributeType.XPATH, DROP_DOWN_XPATH))).thenReturn(webElement);
+                new SearchAttributes(WebActionAttributeType.XPATH, DROP_DOWN_XPATH))).thenReturn(webElement);
         when(webElement.getTagName()).thenReturn(SELECT);
         when(webElement.getAttribute("multiple")).thenReturn(Boolean.toString(isMultiple));
         return webElement;

@@ -19,8 +19,8 @@ package org.vividus.bdd.converter;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 class StringToSearchAttributesConverterTests
 {
@@ -29,7 +29,7 @@ class StringToSearchAttributesConverterTests
     @Test
     void testConvertValue()
     {
-        assertEquals(new SearchAttributes(ActionAttributeType.ID, "id"),
+        assertEquals(new SearchAttributes(WebActionAttributeType.ID, "id"),
                 converter.convertValue("By.id(id)", SearchAttributes.class));
     }
 }

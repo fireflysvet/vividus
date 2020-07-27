@@ -29,12 +29,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IFieldActions;
 import org.vividus.ui.web.action.WebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @ExtendWith(MockitoExtension.class)
 class FieldStepsTests
@@ -62,7 +62,7 @@ class FieldStepsTests
     @Test
     void testDoesNotFieldExist()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME,
                 new SearchParameters(FIELD_NAME, Visibility.ALL));
         fieldSteps.doesNotFieldExist(searchAttributes);
         verify(baseValidations).assertIfElementDoesNotExist(
@@ -72,7 +72,7 @@ class FieldStepsTests
     @Test
     void isFieldFound()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME, FIELD_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME, FIELD_NAME);
         fieldSteps.findFieldBy(searchAttributes);
         verify(baseValidations).assertIfElementExists(A_FIELD_WITH_NAME_FIELD_NAME,
                 searchAttributes);
@@ -81,7 +81,7 @@ class FieldStepsTests
     @Test
     void testEnterTextInFieldWithName()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME, FIELD_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME, FIELD_NAME);
         fieldSteps.enterTextInField(TEXT, searchAttributes);
         verify(webElementActions).typeText(searchAttributes, TEXT);
     }
@@ -89,7 +89,7 @@ class FieldStepsTests
     @Test
     void testAddText()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME, FIELD_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME, FIELD_NAME);
         when(baseValidations.assertIfElementExists(A_FIELD_WITH_NAME_FIELD_NAME, searchAttributes))
                 .thenReturn(webElement);
         fieldSteps.addTextToField(TEXT, searchAttributes);
@@ -106,7 +106,7 @@ class FieldStepsTests
     @Test
     void testClearFieldWithName()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME, FIELD_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME, FIELD_NAME);
         when(baseValidations.assertIfElementExists(A_FIELD_WITH_NAME_FIELD_NAME,
                 searchAttributes)).thenReturn(webElement);
         fieldSteps.clearFieldLocatedBy(searchAttributes);
@@ -123,7 +123,7 @@ class FieldStepsTests
     @Test
     void testClearFieldWithNameUsingKeyboard()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.FIELD_NAME, FIELD_NAME);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.FIELD_NAME, FIELD_NAME);
         when(baseValidations.assertIfElementExists(A_FIELD_WITH_NAME_FIELD_NAME,
                 searchAttributes)).thenReturn(webElement);
         fieldSteps.clearFieldLocatedByUsingKeyboard(searchAttributes);

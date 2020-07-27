@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.jbehave.core.model.ExamplesTable;
@@ -31,12 +29,13 @@ import org.openqa.selenium.support.ui.Select;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.DropDownState;
 import org.vividus.ui.web.action.IFieldActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.Visibility;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
@@ -44,10 +43,22 @@ public class DropdownSteps
 {
     private static final String DROP_DOWN_WITH_NAME = "Drop down with the name '%s'";
 
-    @Inject private IWebElementActions webElementActions;
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IHighlightingSoftAssert highlightingSoftAssert;
-    @Inject private IFieldActions fieldActions;
+    private final IWebElementActions webElementActions;
+    private final IBaseValidations baseValidations;
+    private final IHighlightingSoftAssert highlightingSoftAssert;
+    private final IFieldActions fieldActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public DropdownSteps(IWebElementActions webElementActions, IBaseValidations baseValidations,
+            IHighlightingSoftAssert highlightingSoftAssert, IFieldActions fieldActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.webElementActions = webElementActions;
+        this.baseValidations = baseValidations;
+        this.highlightingSoftAssert = highlightingSoftAssert;
+        this.fieldActions = fieldActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks that previously set searchContext contains a drop down with the expected <b>name</b>
@@ -278,7 +289,7 @@ public class DropdownSteps
 
     private SearchAttributes createSearchAttributes(String dropDownListName)
     {
-        return new SearchAttributes(ActionAttributeType.XPATH,
+        return new SearchAttributes(attributeTypeService.findAttributeType(ActionAttributeType.XPATH),
                 LocatorUtil.getXPath(".//select[@*=%s]", dropDownListName));
     }
 }

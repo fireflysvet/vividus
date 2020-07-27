@@ -19,8 +19,6 @@ package org.vividus.bdd.steps.ui.web;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
@@ -31,23 +29,41 @@ import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IElementValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.State;
 import org.vividus.ui.web.action.ISearchActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
 public class WebElementsSteps
 {
-    @Inject private IWebElementActions webElementActions;
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IElementValidations elementValidations;
-    @Inject private IWebUiContext webUiContext;
-    @Inject private ISearchActions searchActions;
-    @Inject private IHighlightingSoftAssert highlightingSoftAssert;
+    private final IWebElementActions webElementActions;
+    private final IBaseValidations baseValidations;
+    private final IElementValidations elementValidations;
+    private final IWebUiContext webUiContext;
+    private final ISearchActions searchActions;
+    private final IHighlightingSoftAssert highlightingSoftAssert;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public WebElementsSteps(IWebElementActions webElementActions, IBaseValidations baseValidations,
+            IElementValidations elementValidations, IWebUiContext webUiContext, ISearchActions searchActions,
+            IHighlightingSoftAssert highlightingSoftAssert, IActionAttributeTypeService attributeTypeService)
+    {
+        this.webElementActions = webElementActions;
+        this.baseValidations = baseValidations;
+        this.elementValidations = elementValidations;
+        this.webUiContext = webUiContext;
+        this.searchActions = searchActions;
+        this.highlightingSoftAssert = highlightingSoftAssert;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks if the text in context matches <b>regex</b>
@@ -116,7 +132,8 @@ public class WebElementsSteps
 
             if (!assertCondition)
             {
-                SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, text);
+                SearchAttributes attributes = new SearchAttributes(findAttributeType(WebActionAttributeType.CASE_SENSITIVE_TEXT),
+                        text);
                 elements = searchActions.findElements(getSearchContext(), attributes);
                 assertCondition = !elements.isEmpty();
             }
@@ -164,7 +181,7 @@ public class WebElementsSteps
         else
         {
             return baseValidations.assertIfElementDoesNotExist(String.format("An element with text '%s'", text),
-                    new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, text));
+                    new SearchAttributes(findAttributeType(WebActionAttributeType.CASE_SENSITIVE_TEXT), text));
         }
     }
 
@@ -179,7 +196,7 @@ public class WebElementsSteps
     {
         return baseValidations.assertIfElementExists(
                 String.format("A frame with the attribute '%1$s'='%2$s'", attributeType, attributeValue),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findAttributeType(ActionAttributeType.XPATH),
                         LocatorUtil.getXPathByTagNameAndAttribute("iframe", attributeType, attributeValue)));
     }
 
@@ -200,5 +217,10 @@ public class WebElementsSteps
     protected SearchContext getSearchContext()
     {
         return webUiContext.getSearchContext();
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

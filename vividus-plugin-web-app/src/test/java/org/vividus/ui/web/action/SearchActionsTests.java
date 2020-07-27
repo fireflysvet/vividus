@@ -36,16 +36,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
-import org.vividus.ui.web.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IElementAction;
+import org.vividus.ui.action.search.IElementFilterAction;
+import org.vividus.ui.action.search.IElementSearchAction;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
 import org.vividus.ui.web.action.search.ButtonNameSearch;
 import org.vividus.ui.web.action.search.CaseSensitiveTextSearch;
 import org.vividus.ui.web.action.search.DefaultSearch;
 import org.vividus.ui.web.action.search.IActionAttributeType;
-import org.vividus.ui.web.action.search.IElementAction;
-import org.vividus.ui.web.action.search.IElementFilterAction;
-import org.vividus.ui.web.action.search.IElementSearchAction;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,7 +87,7 @@ class SearchActionsTests
         createAndSetElementActionsMap();
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class)))
                 .thenReturn(List.of(webElement));
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
         List<WebElement> foundElements = searchActions.findElements(searchContext, attributes);
         assertEquals(List.of(webElement), foundElements);
     }
@@ -99,7 +99,7 @@ class SearchActionsTests
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class)))
                 .thenReturn(List.of(webElement));
         when(webUiContext.getSearchContext()).thenReturn(searchContext);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
         List<WebElement> foundElements = searchActions.findElements(attributes);
         assertEquals(List.of(webElement), foundElements);
     }
@@ -110,7 +110,7 @@ class SearchActionsTests
         createAndSetElementActionsMap();
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class))).thenReturn(List.of());
         when(webUiContext.getSearchContext()).thenReturn(searchContext);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
         assertEquals(Optional.empty(), searchActions.findElement(attributes));
     }
 
@@ -123,7 +123,7 @@ class SearchActionsTests
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class)))
             .thenReturn(List.of(element1, element2));
         when(webUiContext.getSearchContext()).thenReturn(searchContext);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER);
         assertEquals(Optional.of(element1), searchActions.findElement(attributes));
     }
 
@@ -135,8 +135,8 @@ class SearchActionsTests
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class)))
                 .thenReturn(List.of(webElement));
         when(((IElementFilterAction) searchAction).filter(List.of(webElement), LINK_TEXT)).thenReturn(list);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER)
-                .addFilter(ActionAttributeType.LINK_URL, LINK_TEXT);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT_UPPER)
+                .addFilter(WebActionAttributeType.LINK_URL, LINK_TEXT);
         List<WebElement> foundElements = searchActions.findElements(searchContext, attributes);
         assertEquals(list, foundElements);
     }
@@ -170,9 +170,9 @@ class SearchActionsTests
         List<WebElement> webElements = new ArrayList<>();
         webElements.add(webElement);
         createAndSetElementActionsMap();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, XPATH_LOCATOR);
-        SearchAttributes childAttributes = new SearchAttributes(ActionAttributeType.BUTTON_NAME, BUTTON_NAME);
-        childAttributes.addFilter(ActionAttributeType.LINK_URL, LINK_TEXT);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, XPATH_LOCATOR);
+        SearchAttributes childAttributes = new SearchAttributes(WebActionAttributeType.BUTTON_NAME, BUTTON_NAME);
+        childAttributes.addFilter(WebActionAttributeType.LINK_URL, LINK_TEXT);
         attributes.addChildSearchAttributes(childAttributes);
         WebElement wrongElement = mock(WebElement.class);
         webElements.add(wrongElement);
@@ -191,8 +191,8 @@ class SearchActionsTests
         List<WebElement> webElements = new ArrayList<>();
         webElements.add(webElement);
         createAndSetElementActionsMap();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, XPATH_LOCATOR);
-        SearchAttributes childAttributes = new SearchAttributes(ActionAttributeType.BUTTON_NAME, BUTTON_NAME);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, XPATH_LOCATOR);
+        SearchAttributes childAttributes = new SearchAttributes(WebActionAttributeType.BUTTON_NAME, BUTTON_NAME);
         attributes.addChildSearchAttributes(childAttributes);
         when(caseSensitivetextSearch.search(eq(searchContext), any(SearchParameters.class))).thenReturn(webElements);
         when(buttonNameSearch.search(eq(webElement), any(SearchParameters.class))).thenReturn(List.of());
@@ -203,11 +203,11 @@ class SearchActionsTests
     private void createAndSetElementActionsMap()
     {
         Map<IActionAttributeType, IElementAction> map = new HashMap<>();
-        map.put(ActionAttributeType.CASE_SENSITIVE_TEXT, caseSensitivetextSearch);
-        map.put(ActionAttributeType.LINK_URL, searchAction);
-        map.put(ActionAttributeType.LINK_TEXT, searchAction);
-        map.put(ActionAttributeType.DEFAULT, defaultSearch);
-        map.put(ActionAttributeType.BUTTON_NAME, buttonNameSearch);
+        map.put(WebActionAttributeType.CASE_SENSITIVE_TEXT, caseSensitivetextSearch);
+        map.put(WebActionAttributeType.LINK_URL, searchAction);
+        map.put(WebActionAttributeType.LINK_TEXT, searchAction);
+        map.put(WebActionAttributeType.DEFAULT, defaultSearch);
+        map.put(WebActionAttributeType.BUTTON_NAME, buttonNameSearch);
         searchActions.setElementActions(map);
     }
 }

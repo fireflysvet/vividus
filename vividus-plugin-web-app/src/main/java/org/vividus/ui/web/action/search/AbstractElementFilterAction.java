@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.WebElement;
+import org.vividus.ui.action.search.IElementFilterAction;
 
 public abstract class AbstractElementFilterAction extends AbstractElementSearchAction implements IElementFilterAction
 {

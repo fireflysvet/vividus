@@ -36,6 +36,7 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.vividus.ui.action.IExpectedSearchContextCondition;
 import org.vividus.ui.web.action.ExpectedSearchContextConditions.StaleContextException;
 
 @SuppressWarnings("MethodCount")

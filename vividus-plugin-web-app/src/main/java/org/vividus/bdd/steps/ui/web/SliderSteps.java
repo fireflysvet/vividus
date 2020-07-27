@@ -18,25 +18,35 @@ package org.vividus.bdd.steps.ui.web;
 
 import static org.hamcrest.Matchers.equalTo;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
 public class SliderSteps
 {
-    @Inject private IBaseValidations baseValidations;
-    @Inject private ISoftAssert softAssert;
-    @Inject private IJavascriptActions javascriptActions;
+    private final IBaseValidations baseValidations;
+    private final ISoftAssert softAssert;
+    private final IJavascriptActions javascriptActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public SliderSteps(IBaseValidations baseValidations, ISoftAssert softAssert, IJavascriptActions javascriptActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.softAssert = softAssert;
+        this.javascriptActions = javascriptActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Step sets value of slider (input element with type = "range")
@@ -49,7 +59,7 @@ public class SliderSteps
     public void setSliderValue(String value, String xpath)
     {
         WebElement slider = baseValidations.assertIfElementExists("Slider to select value in",
-                new SearchAttributes(ActionAttributeType.XPATH, LocatorUtil.getXPath(xpath)));
+                new SearchAttributes(findXpathAttributeType(), LocatorUtil.getXPath(xpath)));
         if (null != slider)
         {
             javascriptActions.executeScript("arguments[0].value=arguments[1]", slider, value);
@@ -66,10 +76,15 @@ public class SliderSteps
     public void verifySliderValue(String value, String xpath)
     {
         WebElement slider = baseValidations.assertIfElementExists("Slider to verify value in",
-                new SearchAttributes(ActionAttributeType.XPATH, LocatorUtil.getXPath(xpath)));
+                new SearchAttributes(findXpathAttributeType(), LocatorUtil.getXPath(xpath)));
         if (null != slider)
         {
             softAssert.assertThat("Slider value", slider.getAttribute("value"), equalTo(value));
         }
+    }
+
+    private IActionAttributeType findXpathAttributeType()
+    {
+        return attributeTypeService.findAttributeType(ActionAttributeType.XPATH);
     }
 }

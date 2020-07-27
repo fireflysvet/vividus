@@ -56,12 +56,14 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.vividus.selenium.IWebDriverProvider;
-import org.vividus.ui.web.action.IExpectedConditions;
-import org.vividus.ui.web.action.IExpectedSearchContextCondition;
+import org.vividus.ui.action.IExpectedConditions;
+import org.vividus.ui.action.IExpectedSearchContextCondition;
+import org.vividus.ui.action.WaitResult;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.IWaitActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.WaitResult;
+import org.vividus.ui.web.action.IWebWaitActions;
 
 @ExtendWith({ TestLoggerFactoryExtension.class, MockitoExtension.class })
 class ElementSearchActionTests
@@ -102,7 +104,7 @@ class ElementSearchActionTests
     private IWebElementActions webElementActions;
 
     @Mock
-    private IWaitActions waitActions;
+    private IWebWaitActions waitActions;
 
     @Mock
     private WaitResult<Object> result;

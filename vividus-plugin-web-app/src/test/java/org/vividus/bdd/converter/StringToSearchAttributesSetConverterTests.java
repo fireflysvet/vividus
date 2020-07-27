@@ -25,8 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 class StringToSearchAttributesSetConverterTests
 {
@@ -41,16 +41,16 @@ class StringToSearchAttributesSetConverterTests
     void testConvertValue()
     {
         Set<SearchAttributes> searchAttributesSet = new LinkedHashSet<>();
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.ID, "id"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.CSS_SELECTOR, "#id"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.CLASS_NAME, "clazz"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.LINK_TEXT, "url"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.ELEMENT_NAME, "button"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.XPATH,
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.ID, "id"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.CSS_SELECTOR, "#id"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.CLASS_NAME, "clazz"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.LINK_TEXT, "url"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.ELEMENT_NAME, "button"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.XPATH,
             "//*[contains(normalize-space(@class), 'header')]"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.TAG_NAME, "h1"));
-        searchAttributesSet.add(new SearchAttributes(ActionAttributeType.TAG_NAME, "a")
-            .addFilter(ActionAttributeType.TEXT_PART, "text"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.TAG_NAME, "h1"));
+        searchAttributesSet.add(new SearchAttributes(WebActionAttributeType.TAG_NAME, "a")
+            .addFilter(WebActionAttributeType.TEXT_PART, "text"));
 
         assertEquals(searchAttributesSet, converter.convertValue(LOCATOR_ID + ", By.cssSelector(#id), "
                 + "By.className(clazz), By.linkText(url), By.name(button), " + LOCATOR_XPATH + ", By.tagName(h1), "

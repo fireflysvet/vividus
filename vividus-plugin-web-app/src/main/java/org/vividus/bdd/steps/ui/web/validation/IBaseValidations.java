@@ -24,8 +24,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.vividus.bdd.steps.ComparisonRule;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.IState;
-import org.vividus.ui.web.action.search.SearchAttributes;
 
 public interface IBaseValidations
 {

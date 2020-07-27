@@ -18,9 +18,9 @@ package org.vividus.ui.web;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.vividus.ui.action.IExpectedConditions;
+import org.vividus.ui.action.IExpectedSearchContextCondition;
 import org.vividus.ui.web.action.ExpectedConditions;
-import org.vividus.ui.web.action.IExpectedConditions;
-import org.vividus.ui.web.action.IExpectedSearchContextCondition;
 
 public enum DropDownState implements IState
 {

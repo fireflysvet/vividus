@@ -22,15 +22,22 @@ import java.util.Set;
 import javax.inject.Named;
 
 import org.jbehave.core.steps.ParameterConverters.AbstractParameterConverter;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.util.SearchAttributesConversionUtils;
 
 @Named
 public class StringToSearchAttributesSetConverter extends AbstractParameterConverter<Set<SearchAttributes>>
 {
+    private final SearchAttributesConversionUtils conversionUtils;
+
+    public StringToSearchAttributesSetConverter(SearchAttributesConversionUtils conversionUtils)
+    {
+        this.conversionUtils = conversionUtils;
+    }
+
     @Override
     public Set<SearchAttributes> convertValue(String value, Type type)
     {
-        return SearchAttributesConversionUtils.convertToSearchAttributesSet(value);
+        return conversionUtils.convertToSearchAttributesSet(value);
     }
 }

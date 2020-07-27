@@ -50,7 +50,7 @@ public class MouseActions implements IMouseActions
     @Inject private IWebDriverManager webDriverManager;
     @Inject private ISoftAssert softAssert;
     @Inject private JavascriptActions javascriptActions;
-    @Inject private IWaitActions waitActions;
+    @Inject private IWebWaitActions waitActions;
     @Inject private IAlertActions alertActions;
     @Inject private EventBus eventBus;
     @Inject private IWebUiContext webUiContext;

@@ -23,7 +23,8 @@ import javax.inject.Inject;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.AbstractExpectedConditions;
+import org.vividus.ui.action.search.SearchAttributes;
 
 public final class ExpectedSearchActionsConditions extends AbstractExpectedConditions<SearchAttributes>
 {

@@ -100,7 +100,7 @@ class MouseActionsTests
     private IWebDriverManager webDriverManager;
 
     @Mock
-    private IWaitActions waitActions;
+    private IWebWaitActions waitActions;
 
     @Mock
     private IAlertActions alertActions;

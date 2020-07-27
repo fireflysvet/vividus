@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.fasterxml.jackson.core.JsonParser;
@@ -37,7 +36,14 @@ import org.vividus.ui.web.util.ElementUtil;
 @Named
 public class WebElementDeserializer extends JsonDeserializer<Supplier<?>> implements ContextualDeserializer
 {
-    @Inject private SearchActions searchActions;
+    private final SearchActions searchActions;
+    private final ElementUtil elementUtil;
+
+    public WebElementDeserializer(SearchActions searchActions, ElementUtil elementUtil)
+    {
+        this.searchActions = searchActions;
+        this.elementUtil = elementUtil;
+    }
 
     @Override
     public JsonDeserializer<?> createContextual(DeserializationContext ctxt, BeanProperty property)
@@ -51,6 +57,6 @@ public class WebElementDeserializer extends JsonDeserializer<Supplier<?>> implem
     public Supplier<Optional<WebElement>> deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
     {
         String locator = p.getText();
-        return ElementUtil.getElement(locator, searchActions);
+        return elementUtil.getElement(locator, searchActions);
     }
 }

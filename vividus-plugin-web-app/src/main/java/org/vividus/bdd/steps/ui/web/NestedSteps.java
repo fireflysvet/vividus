@@ -21,8 +21,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import javax.inject.Inject;
-
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.hamcrest.Matcher;
 import org.jbehave.core.annotations.Alias;
@@ -33,10 +31,11 @@ import org.vividus.bdd.steps.ComparisonRule;
 import org.vividus.bdd.steps.SubSteps;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.ICssSelectorFactory;
 import org.vividus.ui.web.action.ISearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.context.SearchContextSetter;
 
@@ -44,11 +43,24 @@ import org.vividus.ui.web.context.SearchContextSetter;
 @TakeScreenshotOnFailure
 public class NestedSteps
 {
-    @Inject private IWebUiContext webUiContext;
-    @Inject private IBaseValidations baseValidations;
-    @Inject private ISearchActions searchActions;
-    @Inject private ISoftAssert softAssert;
-    @Inject private ICssSelectorFactory cssSelectorFactory;
+    private final IWebUiContext webUiContext;
+    private final IBaseValidations baseValidations;
+    private final ISearchActions searchActions;
+    private final ISoftAssert softAssert;
+    private final ICssSelectorFactory cssSelectorFactory;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public NestedSteps(IWebUiContext webUiContext, IBaseValidations baseValidations, ISearchActions searchActions,
+            ISoftAssert softAssert, ICssSelectorFactory cssSelectorFactory,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.webUiContext = webUiContext;
+        this.baseValidations = baseValidations;
+        this.searchActions = searchActions;
+        this.softAssert = softAssert;
+        this.cssSelectorFactory = cssSelectorFactory;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Steps designed to perform steps against all elements found by locator
@@ -92,7 +104,8 @@ public class NestedSteps
             IntStream.range(1, cssSelectors.size()).forEach(i -> {
                 WebElement element = baseValidations
                         .assertIfElementExists("An element for iteration " + (i + 1),
-                                new SearchAttributes(ActionAttributeType.CSS_SELECTOR, cssSelectors.get(i)));
+                                new SearchAttributes(attributeTypeService.findAttributeType(WebActionAttributeType.CSS_SELECTOR),
+                                        cssSelectors.get(i)));
                 runStepsWithContextReset(() ->
                 {
                     webUiContext.putSearchContext(element, () -> { });

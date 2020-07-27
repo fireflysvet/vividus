@@ -23,8 +23,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 class StringToSearchAttributesSetConverterTests
 {
@@ -34,7 +34,7 @@ class StringToSearchAttributesSetConverterTests
     void testConvert()
     {
         Set<SearchAttributes> expectedSet = new HashSet<>(Arrays.asList(new SearchAttributes(
-                ActionAttributeType.ID, "id"), new SearchAttributes(ActionAttributeType.CSS_SELECTOR, "#id")));
+                WebActionAttributeType.ID, "id"), new SearchAttributes(WebActionAttributeType.CSS_SELECTOR, "#id")));
         assertEquals(expectedSet, converter.convert("By.id(id), By.cssSelector(#id)"));
     }
 }

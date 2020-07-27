@@ -41,7 +41,7 @@ public class AlertActions implements IAlertActions
     private static final Logger LOGGER = LoggerFactory.getLogger(AlertActions.class);
 
     @Inject private IWebDriverProvider webDriverProvider;
-    @Inject private IWaitActions waitActions;
+    @Inject private IWebWaitActions waitActions;
     @Inject private IWebDriverManager webDriverManager;
     @Inject private IWindowsActions windowsActions;
     private Duration waitForAlertTimeout;

@@ -50,11 +50,11 @@ import org.vividus.bdd.steps.ui.web.model.JsArgument;
 import org.vividus.bdd.steps.ui.web.model.JsArgumentType;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @ExtendWith(MockitoExtension.class)
@@ -145,7 +145,7 @@ class CodeStepsTests
     {
         codeSteps.ifFaviconWithSrcExists(FAVICON_IMG_PNG);
         verifyNoInteractions(softAssert);
-        verify(mockedBaseValidations).assertIfElementExists(FAVICON, new SearchAttributes(ActionAttributeType.XPATH,
+        verify(mockedBaseValidations).assertIfElementExists(FAVICON, new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(LocatorUtil.getXPath(HEAD_LINK_CONTAINS_REL_SHORTCUT_ICON_ICON, FAVICON_IMG_PNG),
                         Visibility.ALL)));
     }
@@ -165,7 +165,7 @@ class CodeStepsTests
     @Test
     void testDoesInvisibleQuantityOfElementsExists()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                     new SearchParameters(XPATH));
         codeSteps.doesInvisibleQuantityOfElementsExists(searchAttributes,  ComparisonRule.EQUAL_TO, 1);
         verify(mockedBaseValidations).assertIfNumberOfElementsFound(eq("The number of found invisible elements"),
@@ -229,7 +229,7 @@ class CodeStepsTests
 
     private void mockFavicon(String hrefAttribute)
     {
-        when(mockedBaseValidations.assertIfElementExists(FAVICON, new SearchAttributes(ActionAttributeType.XPATH,
+        when(mockedBaseValidations.assertIfElementExists(FAVICON, new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(LocatorUtil.getXPath(HEAD_LINK_CONTAINS_REL_SHORTCUT_ICON_ICON, FAVICON_IMG_PNG),
                         Visibility.ALL)))).thenReturn(mockedWebElement);
         when(mockedWebElement.getAttribute(HREF)).thenReturn(hrefAttribute);

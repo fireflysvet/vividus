@@ -16,6 +16,8 @@
 
 package org.vividus.ui.web.action.search;
 
+import org.vividus.ui.action.search.IElementAction;
+
 public class DefaultSearch extends AbstractElementSearchAction implements IElementAction
 {
 }

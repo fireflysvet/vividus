@@ -27,6 +27,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.support.ui.Wait;
+import org.vividus.ui.action.DescriptiveWait;
+import org.vividus.ui.action.WaitFactory;
 
 class WaitFactoryTests
 {

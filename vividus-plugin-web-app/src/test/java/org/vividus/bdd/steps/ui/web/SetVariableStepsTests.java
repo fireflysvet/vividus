@@ -43,13 +43,13 @@ import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.variable.VariableScope;
 import org.vividus.selenium.IWebDriverProvider;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
 import org.vividus.ui.web.action.ISearchActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
@@ -67,7 +67,7 @@ class SetVariableStepsTests
     private static final String URL_VARIABLE = "urlVariable";
     private static final String VALUE = "value";
     private static final String NUMBER_BY_XPATH = "numberByXpath";
-    private static final SearchAttributes VIDEO_IFRAME_SEARCH = new SearchAttributes(ActionAttributeType.XPATH,
+    private static final SearchAttributes VIDEO_IFRAME_SEARCH = new SearchAttributes(WebActionAttributeType.XPATH,
             LocatorUtil.getXPath("div[contains(@class,'video')]/iframe"));
     private static final String TEXT = "text";
     private static final String VARIABLE_NAME = "variableName";
@@ -236,7 +236,7 @@ class SetVariableStepsTests
     @Test
     void testGetNumberOfElementsByXpathToScenarioVariable()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         when(webUiContext.getSearchContext()).thenReturn(webDriver);
         WebElement webElement = mock(WebElement.class);
         when(searchActions.findElements(webDriver, searchAttributes)).thenReturn(Collections.singletonList(webElement));
@@ -248,7 +248,7 @@ class SetVariableStepsTests
     void testGetNumberOfElementsByXpathToScenarioVariable2()
     {
         when(webUiContext.getSearchContext()).thenReturn(webDriver);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH);
         WebElement webElement = mock(WebElement.class);
         when(searchActions.findElements(webDriver, searchAttributes)).thenReturn(Collections.singletonList(webElement));
         setVariableSteps.getNumberOfElementsByXpathToVariable(searchAttributes, VARIABLE_SCOPE, NUMBER_BY_XPATH);
@@ -260,7 +260,7 @@ class SetVariableStepsTests
     {
         when(webUiContext.getSearchContext()).thenReturn(webDriver);
         WebElement webElement = mock(WebElement.class);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 ".//*[normalize-space(@attributeType)=\"attributeValue\"]");
         when(searchActions.findElements(webDriver, searchAttributes)).thenReturn(Collections.singletonList(webElement));
         setVariableSteps.getNumberOfElementsByAttributeValueToVariable("attributeType", "attributeValue",

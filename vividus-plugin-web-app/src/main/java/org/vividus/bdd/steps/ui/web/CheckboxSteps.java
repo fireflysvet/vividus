@@ -18,8 +18,6 @@ package org.vividus.bdd.steps.ui.web;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebElement;
@@ -27,12 +25,16 @@ import org.openqa.selenium.WrapsElement;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.selenium.element.Checkbox;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeKey;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
 import org.vividus.ui.web.State;
 import org.vividus.ui.web.action.CheckboxAction;
 import org.vividus.ui.web.action.IMouseActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
@@ -44,8 +46,17 @@ public class CheckboxSteps
     private static final String CHECKBOX_LOCATOR = LocatorUtil.getXPath("input[@type='checkbox']");
     private static final String CHECKBOX_WITH_ATTRIBUTE = "Checkbox with the attribute '%1$s'='%2$s'";
 
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IMouseActions mouseActions;
+    private final IBaseValidations baseValidations;
+    private final IMouseActions mouseActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public CheckboxSteps(IBaseValidations baseValidations, IMouseActions mouseActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.mouseActions = mouseActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks checkbox within the context
@@ -60,7 +71,7 @@ public class CheckboxSteps
     public void checkCheckBox()
     {
         WebElement checkBox = baseValidations.assertIfElementExists(CHECKBOX, new SearchAttributes(
-                ActionAttributeType.XPATH, CHECKBOX_LOCATOR));
+                findAttributeType(ActionAttributeType.XPATH), CHECKBOX_LOCATOR));
         changeCheckboxState(new Checkbox(checkBox), true);
     }
 
@@ -78,7 +89,7 @@ public class CheckboxSteps
     public void checkAllCheckboxes()
     {
         List<WebElement> checkBoxes = baseValidations.assertIfElementsExist("Checkboxes number",
-                new SearchAttributes(ActionAttributeType.XPATH, CHECKBOX_LOCATOR));
+                new SearchAttributes(findAttributeType(ActionAttributeType.XPATH), CHECKBOX_LOCATOR));
         checkBoxes.stream().map(Checkbox::new).forEach(checkbox -> changeCheckboxState(checkbox, true));
     }
 
@@ -141,7 +152,7 @@ public class CheckboxSteps
     public Checkbox ifCheckboxExists(String checkboxName)
     {
         return (Checkbox) baseValidations.assertIfElementExists(String.format(CHECKBOX_WITH_NAME, checkboxName),
-                new SearchAttributes(ActionAttributeType.CHECKBOX_NAME, checkboxName));
+                new SearchAttributes(findAttributeType(WebActionAttributeType.CHECKBOX_NAME), checkboxName));
     }
 
     /**
@@ -178,7 +189,8 @@ public class CheckboxSteps
     {
         WebElement checkbox = baseValidations.assertIfElementExists(
                 String.format(CHECKBOX_WITH_ATTRIBUTE, attributeType, attributeValue), new SearchAttributes(
-                        ActionAttributeType.XPATH, getCheckboxXpathByAttributeAndValue(attributeType, attributeValue)));
+                        findAttributeType(ActionAttributeType.XPATH),
+                        getCheckboxXpathByAttributeAndValue(attributeType, attributeValue)));
         return new Checkbox(checkbox);
     }
 
@@ -214,7 +226,7 @@ public class CheckboxSteps
     {
         SearchParameters parameters = new SearchParameters(checkboxName).setWaitForElement(false);
         baseValidations.assertIfElementDoesNotExist(String.format(CHECKBOX_WITH_NAME, checkboxName),
-                new SearchAttributes(ActionAttributeType.CHECKBOX_NAME, parameters));
+                new SearchAttributes(findAttributeType(WebActionAttributeType.CHECKBOX_NAME), parameters));
     }
 
     /**
@@ -271,7 +283,7 @@ public class CheckboxSteps
     private void changeCheckboxState(String xpath, boolean isSelected)
     {
         WebElement checkboxEl = baseValidations.assertIfElementExists(CHECKBOX,
-                new SearchAttributes(ActionAttributeType.XPATH, xpath));
+                new SearchAttributes(findAttributeType(ActionAttributeType.XPATH), xpath));
         changeCheckboxState(new Checkbox(checkboxEl), isSelected);
     }
 
@@ -287,5 +299,10 @@ public class CheckboxSteps
     public String getCheckboxXpathByAttributeAndValue(String attributeType, String attributeValue)
     {
         return LocatorUtil.getXPath("input[@type=\"checkbox\" and @" + attributeType + "=%s]", attributeValue);
+    }
+
+    private IActionAttributeType findAttributeType(IActionAttributeKey key)
+    {
+        return attributeTypeService.findAttributeType(key);
     }
 }

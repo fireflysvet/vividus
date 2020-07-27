@@ -23,6 +23,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.vividus.ui.action.AbstractExpectedConditions;
 
 public final class ExpectedSearchContextConditions extends AbstractExpectedConditions<By>
 {

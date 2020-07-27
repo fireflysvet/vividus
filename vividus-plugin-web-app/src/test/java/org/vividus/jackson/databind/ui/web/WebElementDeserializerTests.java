@@ -34,9 +34,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.WebElement;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.SearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @ExtendWith(MockitoExtension.class)
 class WebElementDeserializerTests
@@ -51,7 +51,7 @@ class WebElementDeserializerTests
     void shouldReturnSupplierForWebElement() throws IOException
     {
         Optional<WebElement> expected = Optional.of(mock(WebElement.class));
-        when(searchActions.findElement(new SearchAttributes(ActionAttributeType.ID, "id"))).thenReturn(expected);
+        when(searchActions.findElement(new SearchAttributes(WebActionAttributeType.ID, "id"))).thenReturn(expected);
         JsonParser parser = mock(JsonParser.class);
         when(parser.getText()).thenReturn("By.id(id)");
         assertEquals(expected, deserializer.deserialize(parser, null).get());

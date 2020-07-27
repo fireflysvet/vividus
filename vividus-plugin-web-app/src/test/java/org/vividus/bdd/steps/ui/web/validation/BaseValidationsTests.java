@@ -51,14 +51,14 @@ import org.openqa.selenium.WrapsElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.vividus.bdd.steps.ComparisonRule;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
 import org.vividus.ui.validation.matcher.ExistsMatcher;
 import org.vividus.ui.validation.matcher.ExpectedConditionsMatcher;
 import org.vividus.ui.validation.matcher.NotExistsMatcher;
 import org.vividus.ui.web.State;
 import org.vividus.ui.web.action.ISearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 
 @ExtendWith(MockitoExtension.class)
@@ -128,7 +128,7 @@ class BaseValidationsTests
         spy = Mockito.spy(baseValidations);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
         SearchParameters searchParameters = new SearchParameters();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, searchParameters);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, searchParameters);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(List.of());
         assertTrue(spy.assertIfElementDoesNotExist(BUSINESS_DESCRIPTION, attributes));
         assertFalse(searchParameters.isWaitForElement());
@@ -141,7 +141,7 @@ class BaseValidationsTests
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
         SearchParameters searchParameters = new SearchParameters();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, searchParameters);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, searchParameters);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(webElements);
         assertFalse(spy.assertIfElementDoesNotExist(BUSINESS_DESCRIPTION, attributes, false));
         assertFalse(searchParameters.isWaitForElement());
@@ -155,7 +155,7 @@ class BaseValidationsTests
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
         SearchParameters searchParameters = new SearchParameters();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, searchParameters);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, searchParameters);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(webElements);
         assertFalse(spy.assertIfElementDoesNotExist(BUSINESS_DESCRIPTION, SYSTEM_DESCRIPTION, attributes));
         assertFalse(searchParameters.isWaitForElement());
@@ -170,7 +170,7 @@ class BaseValidationsTests
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
         SearchParameters searchParameters = new SearchParameters();
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.LINK_TEXT, searchParameters);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.LINK_TEXT, searchParameters);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(webElements);
         assertFalse(spy.assertIfElementDoesNotExist(BUSINESS_DESCRIPTION, SYSTEM_DESCRIPTION, attributes, false));
         assertFalse(searchParameters.isWaitForElement());
@@ -268,7 +268,7 @@ class BaseValidationsTests
     void testAssertIfExactNumberOfElementsFound()
     {
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         String systemDescription = String.format(PATTERN_ELEMENTS, INT_ARG, searchAttributes);
         when(searchActions.findElements(mockedSearchContext, searchAttributes)).thenReturn(webElements);
         baseValidations.assertIfExactNumberOfElementsFound(BUSINESS_DESCRIPTION, searchAttributes, INT_ARG);
@@ -280,7 +280,7 @@ class BaseValidationsTests
     void testAssertIfExactNumberOfElementsFoundNullList()
     {
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         when(searchActions.findElements(mockedSearchContext, searchAttributes)).thenReturn(webElements);
         assertFalse(
                 baseValidations.assertIfExactNumberOfElementsFound(BUSINESS_DESCRIPTION, searchAttributes, INT_ARG));
@@ -291,7 +291,7 @@ class BaseValidationsTests
     {
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         when(searchActions.findElements(mockedSearchContext, searchAttributes)).thenReturn(webElements);
         baseValidations.assertIfElementsExist(BUSINESS_DESCRIPTION, searchAttributes);
         verify(softAssert).assertThat(eq(BUSINESS_DESCRIPTION),
@@ -317,7 +317,7 @@ class BaseValidationsTests
     private List<WebElement> testAssertIfAtLeastNumberOfElementsExist(boolean assertionResult)
     {
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         when(searchActions.findElements(mockedSearchContext, searchAttributes)).thenReturn(webElements);
         int leastCount = 1;
         String systemDescription = String.format("There are at least %d elements with attributes '%s'", leastCount,
@@ -356,7 +356,7 @@ class BaseValidationsTests
     {
         spy = Mockito.spy(baseValidations);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         WebElement element = spy.assertIfAtLeastOneElementExists(BUSINESS_DESCRIPTION, searchAttributes);
         verify(spy).assertIfElementsExist(BUSINESS_DESCRIPTION, mockedSearchContext, searchAttributes);
         assertNull(element);
@@ -368,7 +368,7 @@ class BaseValidationsTests
         spy = Mockito.spy(baseValidations);
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         doReturn(webElements).when(spy).assertIfElementsExist(BUSINESS_DESCRIPTION, mockedSearchContext,
                 searchAttributes);
         WebElement element = spy.assertIfAtLeastOneElementExists(BUSINESS_DESCRIPTION, searchAttributes);
@@ -380,7 +380,7 @@ class BaseValidationsTests
     {
         webElements = List.of(mockedWebElement);
         when(webUiContext.getSearchContext()).thenReturn(mockedSearchContext);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(webElements);
         when(softAssert.assertThat(eq(BUSINESS_DESCRIPTION),
                 eq(SYSTEM_DESCRIPTION), eq(webElements), argThat(matcher -> matcher instanceof ExistsMatcher)))
@@ -395,7 +395,7 @@ class BaseValidationsTests
     @Test
     void testAssertIfZeroOrOneElementFoundZero()
     {
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         Optional<WebElement> element = baseValidations.assertIfZeroOrOneElementFound(BUSINESS_DESCRIPTION, attributes);
         verify(softAssert).recordPassedAssertion(SYSTEM_DESCRIPTION + " not found");
         assertEquals(Optional.empty(), element);
@@ -438,7 +438,7 @@ class BaseValidationsTests
     private void testAssertIfNumberOfElementsFound(Function<SearchAttributes, List<WebElement>> actualCall,
             boolean checkPassed, List<WebElement> foundElements)
     {
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.XPATH, XPATH_INT);
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.XPATH, XPATH_INT);
         when(searchActions.findElements(mockedSearchContext, attributes)).thenReturn(foundElements);
         when(softAssert.assertThat(eq(BUSINESS_DESCRIPTION),
                 eq("Number of elements found by ' XPath: './/xpath=1'; Visibility: VISIBLE;' is equal to 1"),

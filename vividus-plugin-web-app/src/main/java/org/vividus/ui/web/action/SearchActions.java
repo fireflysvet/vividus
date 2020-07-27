@@ -18,7 +18,6 @@ package org.vividus.ui.web.action;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
@@ -27,15 +26,16 @@ import javax.inject.Inject;
 import org.openqa.selenium.By;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
-import org.vividus.ui.web.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.IElementAction;
+import org.vividus.ui.action.search.IElementFilterAction;
+import org.vividus.ui.action.search.IElementSearchAction;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.search.DefaultSearch;
-import org.vividus.ui.web.action.search.IActionAttributeType;
-import org.vividus.ui.web.action.search.IElementAction;
-import org.vividus.ui.web.action.search.IElementFilterAction;
-import org.vividus.ui.web.action.search.IElementSearchAction;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
 import org.vividus.ui.web.context.IWebUiContext;
 
 public class SearchActions implements ISearchActions
@@ -43,8 +43,7 @@ public class SearchActions implements ISearchActions
     private static final String EXCEPTION_MESSAGE = "There is no mapped search action for attribute: ";
 
     @Inject private IWebUiContext webUiContext;
-
-    private Map<IActionAttributeType, IElementAction> elementActions;
+    @Inject private IActionAttributeTypeService attributeTypeService;
 
     @Override
     public List<WebElement> findElements(SearchContext searchContext, By locator)
@@ -121,7 +120,7 @@ public class SearchActions implements ISearchActions
 
     private DefaultSearch getDefaultSearchAction()
     {
-        return getAction(ActionAttributeType.DEFAULT);
+        return getAction(attributeTypeService.findAttributeType(ActionAttributeType.DEFAULT));
     }
 
     @SuppressWarnings("unchecked")
@@ -133,10 +132,5 @@ public class SearchActions implements ISearchActions
             throw new UnsupportedOperationException(EXCEPTION_MESSAGE + actionAttributeType.getAttributeName());
         }
         return (T) elementAction;
-    }
-
-    public void setElementActions(Map<IActionAttributeType, IElementAction> elementActions)
-    {
-        this.elementActions = elementActions;
     }
 }

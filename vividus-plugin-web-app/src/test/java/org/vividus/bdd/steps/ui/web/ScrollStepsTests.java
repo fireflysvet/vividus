@@ -32,8 +32,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.search.SearchAttributes;
 import org.vividus.ui.web.context.IWebUiContext;
 
 @ExtendWith(MockitoExtension.class)

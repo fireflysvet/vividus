@@ -39,11 +39,11 @@ import org.openqa.selenium.WebElement;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IElementValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.State;
 import org.vividus.ui.web.action.IWebElementActions;
 import org.vividus.ui.web.action.SearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
@@ -187,7 +187,7 @@ class WebElementsStepsTests
     {
         when(webUiContext.getSearchContext()).thenReturn(webDriver);
         when(mockedBaseValidations.assertIfElementDoesNotExist("An element with text 'text'",
-                new SearchAttributes(ActionAttributeType.CASE_SENSITIVE_TEXT, TEXT))).thenReturn(true);
+                new SearchAttributes(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEXT))).thenReturn(true);
         assertTrue(webElementsSteps.textDoesNotExist(TEXT));
     }
 
@@ -196,14 +196,14 @@ class WebElementsStepsTests
     {
         webElementsSteps.isFrameWithCertainAttributeFound(ATTRIBUTE_TYPE, ATTRIBUTE_VALUE);
         verify(mockedBaseValidations).assertIfElementExists(A_FRAME_WITH_THE_ATTRIBUTE_ATTRIBUTE_TYPE_ATTRIBUTE_VALUE,
-                new SearchAttributes(ActionAttributeType.XPATH, XPATH));
+                new SearchAttributes(WebActionAttributeType.XPATH, XPATH));
     }
 
     @Test
     void testIsStateFrameWithCertainAttributeFound()
     {
         when(mockedBaseValidations.assertIfElementExists(A_FRAME_WITH_THE_ATTRIBUTE_ATTRIBUTE_TYPE_ATTRIBUTE_VALUE,
-                new SearchAttributes(ActionAttributeType.XPATH, XPATH))).thenReturn(mockedWebElement);
+                new SearchAttributes(WebActionAttributeType.XPATH, XPATH))).thenReturn(mockedWebElement);
         webElementsSteps.isFrameWithCertainAttributeFound(State.ENABLED, ATTRIBUTE_TYPE, ATTRIBUTE_VALUE);
         verify(mockedBaseValidations).assertElementState("The found frame is ENABLED", State.ENABLED, mockedWebElement);
     }

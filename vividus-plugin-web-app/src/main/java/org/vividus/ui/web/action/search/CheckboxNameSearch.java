@@ -24,6 +24,9 @@ import java.util.stream.Collectors;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebElement;
 import org.vividus.selenium.element.Checkbox;
+import org.vividus.ui.action.search.IElementSearchAction;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 
 public class CheckboxNameSearch extends AbstractElementSearchAction implements IElementSearchAction
 {

@@ -46,10 +46,10 @@ import org.vividus.bdd.steps.ComparisonRule;
 import org.vividus.bdd.steps.SubSteps;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.ICssSelectorFactory;
 import org.vividus.ui.web.action.ISearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.context.SearchContextSetter;
 
@@ -89,7 +89,7 @@ class NestedStepsTests
                 ComparisonRule.EQUAL_TO)).thenReturn(Arrays.asList(first, second));
         when(cssSelectorFactory.getCssSelectors(List.of(first, second)))
             .thenReturn(List.of(FIRST_XPATH, SECOND_XPATH).stream());
-        SearchAttributes secondSearchAttributes = new SearchAttributes(ActionAttributeType.CSS_SELECTOR, SECOND_XPATH);
+        SearchAttributes secondSearchAttributes = new SearchAttributes(WebActionAttributeType.CSS_SELECTOR, SECOND_XPATH);
         when(baseValidations.assertIfElementExists("An element for iteration 2",
                 secondSearchAttributes)).thenReturn(second);
         SearchContextSetter searchContextSetter = mockSearchContextSetter();

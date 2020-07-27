@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.vividus.ui.action.search.SearchAttributes;
 
 class SearchAttributesTests
 {
@@ -37,47 +38,47 @@ class SearchAttributesTests
     @BeforeEach
     void beforeEach()
     {
-        searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, "testXpath");
+        searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, "testXpath");
     }
 
     @Test
     void testAddCompetingFilter()
     {
-        searchAttributes.addFilter(ActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
+        searchAttributes.addFilter(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
         UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-            () -> searchAttributes.addFilter(ActionAttributeType.TEXT_PART, TEST_TEXT));
+            () -> searchAttributes.addFilter(WebActionAttributeType.TEXT_PART, TEST_TEXT));
         assertEquals("Competing attributes: 'Text part' and 'Case sensitive text'", exception.getMessage());
     }
 
     @Test
     void testAddCompetingSearchAttribute()
     {
-        searchAttributes = new SearchAttributes(ActionAttributeType.IMAGE_SRC, TEST_IMAGE_SRC);
+        searchAttributes = new SearchAttributes(WebActionAttributeType.IMAGE_SRC, TEST_IMAGE_SRC);
         UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-            () -> searchAttributes.addFilter(ActionAttributeType.IMAGE_SRC_PART, TEST_IMAGE_SRC));
+            () -> searchAttributes.addFilter(WebActionAttributeType.IMAGE_SRC_PART, TEST_IMAGE_SRC));
         assertEquals("Competing attributes: 'Image source part' and 'Image source'", exception.getMessage());
     }
 
     @Test
     void testAddFilter()
     {
-        searchAttributes.addFilter(ActionAttributeType.CASE_SENSITIVE_TEXT, TEST_NAME);
+        searchAttributes.addFilter(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEST_NAME);
         assertEquals(1, searchAttributes.getFilterAttributes().size());
     }
 
     @Test
     void testAddFiltersNoCompetence()
     {
-        searchAttributes.addFilter(ActionAttributeType.PLACEHOLDER, TEST_TEXT);
-        searchAttributes.addFilter(ActionAttributeType.STATE, TEST_STATE);
+        searchAttributes.addFilter(WebActionAttributeType.PLACEHOLDER, TEST_TEXT);
+        searchAttributes.addFilter(WebActionAttributeType.STATE, TEST_STATE);
         assertEquals(2, searchAttributes.getFilterAttributes().size());
     }
 
     @Test
     void testAddTwoFilters()
     {
-        searchAttributes.addFilter(ActionAttributeType.TEXT_PART, TEST_TEXT);
-        searchAttributes.addFilter(ActionAttributeType.STATE, TEST_STATE);
+        searchAttributes.addFilter(WebActionAttributeType.TEXT_PART, TEST_TEXT);
+        searchAttributes.addFilter(WebActionAttributeType.STATE, TEST_STATE);
         assertEquals(2, searchAttributes.getFilterAttributes().size());
     }
 
@@ -85,18 +86,18 @@ class SearchAttributesTests
     void testAddFilterNotApplicable()
     {
         UnsupportedOperationException exception = assertThrows(UnsupportedOperationException.class,
-            () -> searchAttributes.addFilter(ActionAttributeType.BUTTON_NAME, TEST_NAME));
+            () -> searchAttributes.addFilter(WebActionAttributeType.BUTTON_NAME, TEST_NAME));
         assertEquals("Filter by attribute 'BUTTON_NAME' is not supported", exception.getMessage());
     }
 
     @Test
     void testAddOneFilterWithMultipleValues()
     {
-        searchAttributes.addFilter(ActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
-        searchAttributes.addFilter(ActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
+        searchAttributes.addFilter(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
+        searchAttributes.addFilter(WebActionAttributeType.CASE_SENSITIVE_TEXT, TEST_TEXT);
         Map<IActionAttributeType, List<String>> filterAttributes = searchAttributes.getFilterAttributes();
         assertEquals(1, filterAttributes.size());
-        assertEquals(TEST_TEXT, filterAttributes.get(ActionAttributeType.CASE_SENSITIVE_TEXT).get(0));
-        assertEquals(TEST_TEXT, filterAttributes.get(ActionAttributeType.CASE_SENSITIVE_TEXT).get(1));
+        assertEquals(TEST_TEXT, filterAttributes.get(WebActionAttributeType.CASE_SENSITIVE_TEXT).get(0));
+        assertEquals(TEST_TEXT, filterAttributes.get(WebActionAttributeType.CASE_SENSITIVE_TEXT).get(1));
     }
 }

@@ -30,10 +30,12 @@ import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vividus.ui.web.action.IExpectedConditions;
+import org.vividus.ui.action.IExpectedConditions;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
-import org.vividus.ui.web.action.IWaitActions;
 import org.vividus.ui.web.action.IWebElementActions;
+import org.vividus.ui.web.action.IWebWaitActions;
 import org.vividus.ui.web.util.LocatorUtil;
 
 public abstract class AbstractElementSearchAction
@@ -47,7 +49,7 @@ public abstract class AbstractElementSearchAction
 
     @Inject private IWebElementActions webElementActions;
     @Inject private IJavascriptActions javascriptActions;
-    @Inject private IWaitActions waitActions;
+    @Inject private IWebWaitActions waitActions;
     @Inject private IExpectedConditions<By> expectedConditions;
     private Duration waitForElementTimeout;
     private boolean retrySearchIfStale;

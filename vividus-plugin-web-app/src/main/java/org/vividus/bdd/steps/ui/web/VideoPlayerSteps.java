@@ -18,22 +18,30 @@ package org.vividus.bdd.steps.ui.web;
 
 import java.util.function.Consumer;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.When;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.monitor.TakeScreenshotOnFailure;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.IVideoPlayerActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
 import org.vividus.ui.web.util.LocatorUtil;
 
 @TakeScreenshotOnFailure
 public class VideoPlayerSteps
 {
-    @Inject private IBaseValidations baseValidations;
-    @Inject private IVideoPlayerActions videoPlayerActions;
+    private final IBaseValidations baseValidations;
+    private final IVideoPlayerActions videoPlayerActions;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public VideoPlayerSteps(IBaseValidations baseValidations, IVideoPlayerActions videoPlayerActions,
+            IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.videoPlayerActions = videoPlayerActions;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * This step rewinds the video in the video player to specified time in seconds. The target element must be
@@ -70,7 +78,8 @@ public class VideoPlayerSteps
     private void findVideoPlayerAndExecuteAction(String videoPlayerName, Consumer<WebElement> actionConsumer)
     {
         WebElement videoPlayer = baseValidations.assertIfElementExists("Video player", new SearchAttributes(
-                ActionAttributeType.XPATH, LocatorUtil.getXPath("//video[@*='%1$s']", videoPlayerName)));
+                attributeTypeService.findAttributeType(ActionAttributeType.XPATH),
+                LocatorUtil.getXPath("//video[@*='%1$s']", videoPlayerName)));
         if (videoPlayer != null)
         {
             actionConsumer.accept(videoPlayer);

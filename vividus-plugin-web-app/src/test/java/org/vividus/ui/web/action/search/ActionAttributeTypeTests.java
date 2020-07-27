@@ -27,46 +27,46 @@ class ActionAttributeTypeTests
     @Test
     void getSearchTypes()
     {
-        Set<ActionAttributeType> searchTypes = Set.of(
-                ActionAttributeType.LINK_TEXT,
-                ActionAttributeType.LINK_URL,
-                ActionAttributeType.LINK_URL_PART,
-                ActionAttributeType.CASE_SENSITIVE_TEXT,
-                ActionAttributeType.CASE_INSENSITIVE_TEXT,
-                ActionAttributeType.TOOLTIP,
-                ActionAttributeType.XPATH,
-                ActionAttributeType.CSS_SELECTOR,
-                ActionAttributeType.TAG_NAME,
-                ActionAttributeType.IMAGE_SRC,
-                ActionAttributeType.IMAGE_SRC_PART,
-                ActionAttributeType.BUTTON_NAME,
-                ActionAttributeType.FIELD_NAME,
-                ActionAttributeType.CHECKBOX_NAME,
-                ActionAttributeType.ELEMENT_NAME,
-                ActionAttributeType.ID,
-                ActionAttributeType.CLASS_NAME);
-        assertEquals(searchTypes, ActionAttributeType.getSearchTypes());
+        Set<WebActionAttributeType> searchTypes = Set.of(
+                WebActionAttributeType.LINK_TEXT,
+                WebActionAttributeType.LINK_URL,
+                WebActionAttributeType.LINK_URL_PART,
+                WebActionAttributeType.CASE_SENSITIVE_TEXT,
+                WebActionAttributeType.CASE_INSENSITIVE_TEXT,
+                WebActionAttributeType.TOOLTIP,
+                WebActionAttributeType.XPATH,
+                WebActionAttributeType.CSS_SELECTOR,
+                WebActionAttributeType.TAG_NAME,
+                WebActionAttributeType.IMAGE_SRC,
+                WebActionAttributeType.IMAGE_SRC_PART,
+                WebActionAttributeType.BUTTON_NAME,
+                WebActionAttributeType.FIELD_NAME,
+                WebActionAttributeType.CHECKBOX_NAME,
+                WebActionAttributeType.ELEMENT_NAME,
+                WebActionAttributeType.ID,
+                WebActionAttributeType.CLASS_NAME);
+        assertEquals(searchTypes, WebActionAttributeType.getSearchTypes());
     }
 
     @Test
     void getFilterTypes()
     {
-        Set<ActionAttributeType> filterTypes = Set.of(
-                ActionAttributeType.LINK_URL,
-                ActionAttributeType.LINK_URL_PART,
-                ActionAttributeType.CASE_SENSITIVE_TEXT,
-                ActionAttributeType.TOOLTIP,
-                ActionAttributeType.IMAGE_SRC_PART,
-                ActionAttributeType.TEXT_PART,
-                ActionAttributeType.PLACEHOLDER,
-                ActionAttributeType.STATE,
-                ActionAttributeType.DROP_DOWN_STATE,
-                ActionAttributeType.VALIDATION_ICON_SOURCE,
-                ActionAttributeType.RELATIVE_TO_PARENT_WIDTH,
-                ActionAttributeType.CLASS_ATTRIBUTE_PART,
-                ActionAttributeType.FIELD_TEXT,
-                ActionAttributeType.FIELD_TEXT_PART,
-                ActionAttributeType.DROP_DOWN_TEXT);
-        assertEquals(filterTypes, ActionAttributeType.getFilterTypes());
+        Set<WebActionAttributeType> filterTypes = Set.of(
+                WebActionAttributeType.LINK_URL,
+                WebActionAttributeType.LINK_URL_PART,
+                WebActionAttributeType.CASE_SENSITIVE_TEXT,
+                WebActionAttributeType.TOOLTIP,
+                WebActionAttributeType.IMAGE_SRC_PART,
+                WebActionAttributeType.TEXT_PART,
+                WebActionAttributeType.PLACEHOLDER,
+                WebActionAttributeType.STATE,
+                WebActionAttributeType.DROP_DOWN_STATE,
+                WebActionAttributeType.VALIDATION_ICON_SOURCE,
+                WebActionAttributeType.RELATIVE_TO_PARENT_WIDTH,
+                WebActionAttributeType.CLASS_ATTRIBUTE_PART,
+                WebActionAttributeType.FIELD_TEXT,
+                WebActionAttributeType.FIELD_TEXT_PART,
+                WebActionAttributeType.DROP_DOWN_TEXT);
+        assertEquals(filterTypes, WebActionAttributeType.getFilterTypes());
     }
 }

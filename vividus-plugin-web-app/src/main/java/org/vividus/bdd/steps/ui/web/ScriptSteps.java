@@ -16,20 +16,27 @@
 
 package org.vividus.bdd.steps.ui.web;
 
-import javax.inject.Inject;
-
 import org.jbehave.core.annotations.Then;
 import org.openqa.selenium.WebElement;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.util.LocatorUtil;
 
 public class ScriptSteps
 {
-    @Inject private IBaseValidations baseValidations;
+    private final IBaseValidations baseValidations;
+    private final IActionAttributeTypeService attributeTypeService;
+
+    public ScriptSteps(IBaseValidations baseValidations, IActionAttributeTypeService attributeTypeService)
+    {
+        this.baseValidations = baseValidations;
+        this.attributeTypeService = attributeTypeService;
+    }
 
     /**
      * Checks that there is exactly one <b>javascript file</b> (JS file) with the given <b>filename</b>
@@ -51,7 +58,7 @@ public class ScriptSteps
     public WebElement thenJavascriptFileWithNameIsIncludedInTheSourceCode(String jsFileName)
     {
         return baseValidations.assertIfElementExists(String.format("Script with the name '%s'", jsFileName),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findXpathAttributeType(),
                         new SearchParameters(LocatorUtil.getXPath(".//script[contains(@src, %s)]", jsFileName),
                                 Visibility.ALL)));
     }
@@ -76,7 +83,7 @@ public class ScriptSteps
     public WebElement thenJavascriptFileWithTextIsIncludedInTheSourceCode(String jsText)
     {
         return baseValidations.assertIfElementExists(String.format("Script with text '%s'", jsText),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findXpathAttributeType(),
                         new SearchParameters(LocatorUtil.getXPath(".//script[text()=%s]", jsText), Visibility.ALL)));
     }
 
@@ -100,8 +107,13 @@ public class ScriptSteps
     public WebElement thenJavascriptWithTextPartIsIncludedInTheSourceCode(String jsTextPart)
     {
         return baseValidations.assertIfElementExists(String.format("Script with the text part '%s'", jsTextPart),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findXpathAttributeType(),
                         new SearchParameters(LocatorUtil.getXPath(".//script[contains(text(),%s)]", jsTextPart),
                                 Visibility.ALL)));
+    }
+
+    private IActionAttributeType findXpathAttributeType()
+    {
+        return attributeTypeService.findAttributeType(ActionAttributeType.XPATH);
     }
 }

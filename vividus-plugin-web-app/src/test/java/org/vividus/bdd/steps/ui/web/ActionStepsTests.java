@@ -52,8 +52,8 @@ import org.vividus.bdd.steps.ui.web.model.SequenceActionType;
 import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.selenium.IWebDriverProvider;
 import org.vividus.softassert.ISoftAssert;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 @ExtendWith(MockitoExtension.class)
 class ActionStepsTests
@@ -100,7 +100,7 @@ class ActionStepsTests
     @Test
     void testExecuteActionsSequence()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
         List<Action> actions = createActionsList(searchAttributes);
         when(baseValidations.assertIfElementExists(ELEMENT_EXISTS_MESSAGE, searchAttributes)).thenReturn(webElement);
         doReturn(true).when(softAssert).assertTrue(OFFSETS_PRESENT_MESSAGE, true);
@@ -120,7 +120,7 @@ class ActionStepsTests
     @Test
     void testExecuteActionsSequenceWrongSearchAttributes()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
         List<Action> actions = createActionsList(searchAttributes);
         when(baseValidations.assertIfElementExists(ELEMENT_EXISTS_MESSAGE, searchAttributes)).thenReturn(null);
         actionSteps.executeActionsSequence(actions);
@@ -144,7 +144,7 @@ class ActionStepsTests
     @Test
     void testExecuteSequenceOfActions()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
         Point point = mock(Point.class);
         WebElement webElement = mock(WebElement.class);
         int offset = 15;
@@ -202,7 +202,7 @@ class ActionStepsTests
     @Test
     void testExecuteActionsSequenceElementIsNull()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH, SIGNATURE_FIELD_XPATH);
 
         when(baseValidations.assertIfElementExists(ELEMENT_EXISTS_MESSAGE, searchAttributes)).thenReturn(null);
 

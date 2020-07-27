@@ -40,13 +40,15 @@ import org.vividus.bdd.steps.ui.web.validation.IBaseValidations;
 import org.vividus.bdd.steps.ui.web.validation.IElementValidations;
 import org.vividus.bdd.steps.ui.web.validation.IHighlightingSoftAssert;
 import org.vividus.selenium.IWebDriverProvider;
+import org.vividus.ui.action.search.ActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeType;
+import org.vividus.ui.action.search.IActionAttributeTypeService;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.ClickResult;
 import org.vividus.ui.web.action.IMouseActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
 import org.vividus.ui.web.context.IWebUiContext;
 import org.vividus.ui.web.util.LocatorUtil;
 
@@ -65,6 +67,7 @@ public class ElementSteps implements ResourceLoaderAware
     @Inject private IWebUiContext webUiContext;
     @Inject private IElementValidations elementValidations;
     @Inject private IMouseActions mouseActions;
+    @Inject private IActionAttributeTypeService attributeTypeService;
     private ResourceLoader resourceLoader;
 
     /**
@@ -274,7 +277,7 @@ public class ElementSteps implements ResourceLoaderAware
     {
         WebElement webElement = webUiContext.getSearchContext(WebElement.class);
         WebElement bodyElement = baseValidations.assertIfElementExists("'Body' element", webDriverProvider.get(),
-                new SearchAttributes(ActionAttributeType.XPATH,
+                new SearchAttributes(findXpathAttributeType(),
                         new SearchParameters(LocatorUtil.getXPath("//body"), Visibility.ALL)));
         elementValidations.assertIfElementHasWidthInPerc(bodyElement, webElement, widthInPerc);
     }
@@ -288,7 +291,7 @@ public class ElementSteps implements ResourceLoaderAware
     {
         WebElement elementChild = webUiContext.getSearchContext(WebElement.class);
         WebElement elementParent = baseValidations.assertIfElementExists("Parent element",
-                new SearchAttributes(ActionAttributeType.XPATH, "./.."));
+                new SearchAttributes(findXpathAttributeType(), "./.."));
         elementValidations.assertIfElementHasWidthInPerc(elementParent, elementChild, width);
     }
 
@@ -324,5 +327,10 @@ public class ElementSteps implements ResourceLoaderAware
     private boolean isRemoteExecution()
     {
         return webDriverProvider.isRemoteExecution();
+    }
+
+    private IActionAttributeType findXpathAttributeType()
+    {
+        return attributeTypeService.findAttributeType(ActionAttributeType.XPATH);
     }
 }

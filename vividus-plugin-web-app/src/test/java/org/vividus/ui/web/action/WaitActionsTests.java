@@ -49,6 +49,8 @@ import org.vividus.selenium.IWebDriverProvider;
 import org.vividus.selenium.WebDriverType;
 import org.vividus.selenium.manager.IWebDriverManager;
 import org.vividus.softassert.ISoftAssert;
+import org.vividus.ui.action.DescriptiveWait;
+import org.vividus.ui.action.IWaitFactory;
 
 @ExtendWith(MockitoExtension.class)
 class WaitActionsTests
@@ -62,7 +64,7 @@ class WaitActionsTests
     private static final String EXCEPTION_TIMEOUT_MESSAGE = "mocked timeout exception message";
     private static final String MOCKED_WAIT_DESCRIPTION = "mocked wait description";
 
-    private WaitActions spy;
+    private WebWaitActions spy;
 
     @Mock
     private IWebDriverProvider webDriverProvider;
@@ -98,7 +100,7 @@ class WaitActionsTests
     private TargetLocator targetLocator;
 
     @InjectMocks
-    private WaitActions waitActions;
+    private WebWaitActions waitActions;
 
     @Test
     void testWaitWith4Parameters()

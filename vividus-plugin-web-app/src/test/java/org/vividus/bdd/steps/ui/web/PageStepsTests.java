@@ -61,14 +61,14 @@ import org.vividus.http.client.HttpResponse;
 import org.vividus.http.client.IHttpClient;
 import org.vividus.selenium.IWebDriverProvider;
 import org.vividus.selenium.manager.IWebDriverManager;
+import org.vividus.ui.action.search.SearchAttributes;
+import org.vividus.ui.action.search.SearchParameters;
+import org.vividus.ui.action.search.Visibility;
 import org.vividus.ui.web.action.IJavascriptActions;
 import org.vividus.ui.web.action.INavigateActions;
-import org.vividus.ui.web.action.IWaitActions;
 import org.vividus.ui.web.action.IWebElementActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
-import org.vividus.ui.web.action.search.SearchParameters;
-import org.vividus.ui.web.action.search.Visibility;
+import org.vividus.ui.web.action.IWebWaitActions;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 import org.vividus.ui.web.configuration.AuthenticationMode;
 import org.vividus.ui.web.configuration.WebApplicationConfiguration;
 import org.vividus.ui.web.context.IWebUiContext;
@@ -124,7 +124,7 @@ class PageStepsTests
     private SetContextSteps setContextSteps;
 
     @Mock
-    private IWaitActions waitActions;
+    private IWebWaitActions waitActions;
 
     @Mock
     private IWebDriverProvider webDriverProvider;
@@ -210,7 +210,7 @@ class PageStepsTests
     void testIsElementAtTheTop()
     {
         WebElement webElement = mock(WebElement.class);
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(LocatorUtil.getXPathByAttribute(ID, VALUE), Visibility.ALL));
         when(mockedBaseValidations.assertIfElementExists(ELEMENT_TO_VERIFY_POSITION, searchAttributes))
                 .thenReturn(webElement);
@@ -223,7 +223,7 @@ class PageStepsTests
     @Test
     void testIsElementAtTheTopElementNull()
     {
-        SearchAttributes searchAttributes = new SearchAttributes(ActionAttributeType.XPATH,
+        SearchAttributes searchAttributes = new SearchAttributes(WebActionAttributeType.XPATH,
                 new SearchParameters(LocatorUtil.getXPathByAttribute(ID, VALUE)));
         when(mockedBaseValidations.assertIfElementExists(ELEMENT_TO_VERIFY_POSITION, searchAttributes))
                 .thenReturn(null);

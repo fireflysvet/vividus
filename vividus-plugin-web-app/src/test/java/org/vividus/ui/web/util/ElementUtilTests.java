@@ -27,9 +27,9 @@ import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebElement;
+import org.vividus.ui.action.search.SearchAttributes;
 import org.vividus.ui.web.action.SearchActions;
-import org.vividus.ui.web.action.search.ActionAttributeType;
-import org.vividus.ui.web.action.search.SearchAttributes;
+import org.vividus.ui.web.action.search.WebActionAttributeType;
 
 class ElementUtilTests
 {
@@ -38,7 +38,7 @@ class ElementUtilTests
     {
         Optional<WebElement> expected = Optional.of(mock(WebElement.class));
         SearchActions searchActions = mock(SearchActions.class);
-        SearchAttributes attributes = new SearchAttributes(ActionAttributeType.ID, "id");
+        SearchAttributes attributes = new SearchAttributes(WebActionAttributeType.ID, "id");
         when(searchActions.findElement(attributes)).thenReturn(expected);
         Supplier<Optional<WebElement>> elementSupplier = ElementUtil.getElement("By.id(id)", searchActions);
         assertEquals(expected, elementSupplier.get());
